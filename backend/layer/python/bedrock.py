@@ -19,10 +19,10 @@ def invoke_nova_pro(system_prompt: str,
     _log('nova_pro_invoking')
     body = {
         "messages": [
-            {"role": "user", "content": user_content}
+            {"role": "user", "content": [{"text": user_content}]}
         ],
         "system": [{"text": system_prompt}],
-        "inferenceConfig": {"maxNewTokens": max_tokens}
+        "inferenceConfig": {"max_new_tokens": max_tokens}
     }
     try:
         response = _get_client().invoke_model(
