@@ -188,7 +188,7 @@ def run(event: dict) -> dict:
         severity = 'low'
 
     at_risk = [a.get('name') for a in accounts
-               if a.get('risk_score', 0) > 0.35]
+               if a.get('risk_score', 0) > 0.25]
 
     evidence = {
         'agent': 'revenue',

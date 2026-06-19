@@ -179,7 +179,7 @@ def run(event: dict) -> dict:
 
     accounts = analysis.get('accounts', [])
     high_risk = len([a for a in analysis.get('accounts', [])
-                     if a.get('churn_risk_score', 0) >= 0.35])
+                     if a.get('churn_risk_score', 0) >= 0.25])
     confidence = float(analysis.get('overall_churn_confidence', 0.5))
     highest = analysis.get('highest_risk_account', 'Unknown')
 
@@ -193,7 +193,7 @@ def run(event: dict) -> dict:
         severity = 'low'
 
     at_risk = [a.get('name') for a in accounts
-               if a.get('churn_risk_score', 0) >= 0.35]
+               if a.get('churn_risk_score', 0) >= 0.25]
 
     # accounts[0] may not be the highest risk — find the account
     # matching highest_risk_account by name for its signals.

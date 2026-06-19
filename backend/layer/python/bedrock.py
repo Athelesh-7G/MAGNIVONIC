@@ -47,7 +47,7 @@ def invoke_titan_embed(text: str) -> list:
     _log('titan_embed_invoking',
          text_length=len(text))
     body = {"inputText": text,
-            "dimensions": 1536,
+            "dimensions": 1024,
             "normalize": True}
     try:
         response = _get_client().invoke_model(

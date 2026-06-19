@@ -1,10 +1,7 @@
 # POST /analyze — triggers full analysis
 import json
+import boto3
 from datetime import datetime, timezone
-
-# Lambda client — uncommented on Day 6 to invoke the Orchestrator
-# import boto3
-# _lambda = boto3.client('lambda', region_name='us-east-1')
 
 CORS_HEADERS = {
     'Content-Type': 'application/json',
@@ -13,39 +10,70 @@ CORS_HEADERS = {
     'Access-Control-Allow-Headers': 'Content-Type'
 }
 
+_lambda_client = None
 
-def log(event_name: str, **kwargs):
+
+def _get_lambda():
+    global _lambda_client
+    if _lambda_client is None:
+        _lambda_client = boto3.client('lambda',
+                                      region_name='us-east-1')
+    return _lambda_client
+
+
+def log(event_name, **kwargs):
     print(json.dumps({
-        'service': 'magnivonic',
-        'api': 'analyze',
+        'service': 'magnivonic', 'component': 'api-analyze',
         'event': event_name,
         'timestamp': datetime.now(timezone.utc).isoformat(),
         **kwargs
     }))
 
 
-def handler(event: dict, context) -> dict:
+def handler(event, context):
     if event.get('httpMethod') == 'OPTIONS':
         return {'statusCode': 200, 'headers': CORS_HEADERS,
                 'body': ''}
 
-    raw_body = event.get('body') or '{}'
+    log('analyze_requested')
+
     try:
-        body = json.loads(raw_body) if isinstance(raw_body, str) else raw_body
-    except (json.JSONDecodeError, TypeError):
-        body = {}
+        body = json.loads(event.get('body') or '{}')
+        trigger = body.get('trigger', 'api_request')
 
-    log('analyze_invoked', request_body=body)
+        response = _get_lambda().invoke(
+            FunctionName='magnivonic-orchestrator-agent',
+            InvocationType='RequestResponse',
+            Payload=json.dumps({"trigger": trigger}).encode()
+        )
+        payload = json.loads(response['Payload'].read())
 
-    return {
-        'statusCode': 200,
-        'headers': CORS_HEADERS,
-        'body': json.dumps({
-            'status': 'skeleton',
-            'message': ('Analyze endpoint ready. On Day 6 this will '
-                        'invoke the magnivonic-orchestrator-agent Lambda '
-                        'to run all 4 domain agents in parallel and return '
-                        'an executive brief.'),
-            'timestamp': datetime.now(timezone.utc).isoformat()
-        })
-    }
+        if payload.get('statusCode') == 200:
+            result = payload.get('result', {})
+            log('analyze_success',
+                risk_score=result.get('overall_risk_score'),
+                severity=result.get('context', {}).get(
+                    'combined_severity'))
+            return {
+                'statusCode': 200,
+                'headers': CORS_HEADERS,
+                'body': json.dumps(result, default=str)
+            }
+        else:
+            log('analyze_agent_error',
+                error=payload.get('error'))
+            return {
+                'statusCode': 502,
+                'headers': CORS_HEADERS,
+                'body': json.dumps({
+                    'error': 'Analysis pipeline failed',
+                    'detail': payload.get('error', 'unknown')
+                })
+            }
+    except Exception as e:
+        log('analyze_exception', error=str(e))
+        return {
+            'statusCode': 500,
+            'headers': CORS_HEADERS,
+            'body': json.dumps({'error': str(e)})
+        }
