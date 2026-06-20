@@ -2,6 +2,11 @@
 
 Standalone script — run locally, not part of any Lambda layer.
 Replaces the [0.0]*1536 placeholder embeddings seeded on Day 1.
+
+Day 6 update: embeds ALL rows (not just embedding IS NULL) using
+summary + outcome + lessons_learned, so every row — including the
+original 5 — uses the same richer 3-field combination now that
+lessons_learned exists.
 """
 import json
 import time
@@ -37,14 +42,15 @@ def embed(text: str) -> list:
 def main():
     cur = conn.cursor()
     cur.execute("""
-        SELECT id, summary, outcome FROM organizational_memory
+        SELECT id, summary, outcome, lessons_learned
+        FROM organizational_memory
         ORDER BY created_at ASC
     """)
     rows = cur.fetchall()
 
     total = len(rows)
-    for i, (row_id, summary, outcome) in enumerate(rows):
-        embed_text = f"{summary} {outcome}"
+    for i, (row_id, summary, outcome, lessons_learned) in enumerate(rows):
+        embed_text = f"{summary} {outcome} {lessons_learned or ''}"
         try:
             embedding = embed(embed_text)
         except Exception as e:

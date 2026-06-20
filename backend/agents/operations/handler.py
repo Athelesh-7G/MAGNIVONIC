@@ -19,6 +19,10 @@ def log(event_name, **kwargs):
         **kwargs}))
 
 def handler(event, context):
+    if event.get("is_warmup"):
+        log("keep_warm_ping")
+        return {"statusCode": 200, "agent": AGENT_NAME,
+                "result": {"status": "warm"}}
     log("agent_invoked",
         trigger=event.get("trigger", "direct"),
         request_id=getattr(context, "aws_request_id", "local"))

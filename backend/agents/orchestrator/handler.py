@@ -21,7 +21,7 @@ You receive a JSON object with:
   combined_severity: overall severity string
   combined_confidence: overall confidence 0.0-1.0
   all_affected_customers: list of affected customer names
-  past_risks: array of similar historical risks, each with summary, outcome, prevented_churn, revenue_saved, similarity (0.0-1.0)
+  past_risks: array of similar historical risks, each with summary, outcome, prevented_churn, revenue_saved, lessons_learned, similarity (0.0-1.0)
 
 CORE PRINCIPLE — cross-domain synthesis is the intelligence:
 Do not merely restate each agent's finding. The value is in connecting signals across pillars. A security API spike, a support ticket surge, a declining health score, and an imminent renewal affecting the SAME customer are not four problems — they are one cascading event. Identify that connective tissue.
@@ -44,7 +44,7 @@ Your tasks:
    - Time-bound (set urgency to one of: immediate, 24h, 48h, this_week)
    - Tied to the specific evidence that motivates it (put that in rationale)
 
-6. historical_precedent — If any past_risk has similarity > 0.35, reference the single most similar one in the form: "Similar to <summary snippet>, which was resolved by <outcome snippet>." If no past_risk exceeds 0.35 similarity, return null.
+6. historical_precedent — If any past_risk has similarity > 0.35, reference the single most similar one in the form: "Similar to <summary snippet>, which was resolved by <outcome snippet>." If no past_risk exceeds 0.35 similarity, return null. When referencing a past_risk in historical_precedent, include its lessons_learned insight if the field is present and non-empty — e.g. "Similar to [summary snippet], resolved by [outcome snippet]. Lesson at the time: [lessons_learned snippet]."
 
 7. estimated_resolution_hours — A realistic integer estimate informed by past_risks resolution where available.
 
@@ -83,6 +83,10 @@ def log(event_name: str, **kwargs):
 
 
 def handler(event: dict, context) -> dict:
+    if event.get('is_warmup'):
+        log('keep_warm_ping')
+        return {'statusCode': 200, 'agent': AGENT_NAME,
+                'result': {'status': 'warm'}}
     log('agent_invoked',
         trigger=event.get('trigger', 'direct'),
         request_id=getattr(context, 'aws_request_id',
@@ -147,6 +151,7 @@ def _search_memory(context: dict) -> list:
                 SELECT
                   summary, outcome, prevented_churn,
                   revenue_saved, contributing_agents,
+                  lessons_learned,
                   1 - (embedding <=> %s::vector) as similarity
                 FROM organizational_memory
                 ORDER BY embedding <=> %s::vector
@@ -163,7 +168,8 @@ def _search_memory(context: dict) -> list:
                 "prevented_churn": r[2],
                 "revenue_saved": float(r[3] or 0),
                 "contributing_agents": r[4] or [],
-                "similarity": float(r[5])
+                "lessons_learned": r[5] or "",
+                "similarity": float(r[6])
             }
             for r in rows
         ]
