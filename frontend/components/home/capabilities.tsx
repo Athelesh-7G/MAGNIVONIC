@@ -41,7 +41,7 @@ export function Capabilities() {
 
         <div className="py-16">
           <div className="max-w-xl mb-14">
-            <h2 className="text-[clamp(28px,3.2vw,42px)] font-black tracking-[-0.03em] leading-[1.08] text-foreground text-balance">
+            <h2 className="text-[clamp(28px,3.2vw,42px)] font-bold tracking-[-0.03em] leading-[1.08] text-foreground text-balance">
               One system.{' '}
               <span className="text-primary">Four domains.</span>
             </h2>
@@ -55,7 +55,7 @@ export function Capabilities() {
               <Reveal
                 key={index}
                 delay={i * 0.08}
-                className="border border-border rounded-xl p-6 bg-card hover:border-primary/50 hover:shadow-[0_0_0_1px_oklch(0.50_0.22_255/0.15)] transition-colors group"
+                className="border border-border rounded-xl p-6 bg-card hover:border-primary/50 hover:shadow-[0_0_0_1px_oklch(0.50_0.24_293/0.15)] transition-colors group"
               >
                 <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50 block mb-4">
                   {index}
@@ -63,7 +63,7 @@ export function Capabilities() {
                 <h3 className="text-[16px] font-bold text-foreground leading-snug mb-2 group-hover:text-primary transition-colors">
                   {name}
                 </h3>
-                <p className="text-[13px] text-foreground/70 leading-snug mb-3 font-semibold">
+                <p className="text-[13px] text-foreground/90 leading-snug mb-3 font-semibold">
                   {phrase}
                 </p>
                 <p className="text-[13px] text-muted-foreground leading-relaxed">

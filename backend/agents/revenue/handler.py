@@ -136,7 +136,9 @@ def run(event: dict) -> dict:
               c.renewal_date, c.health_score,
               COALESCE(pd.close_probability, 0.5),
               COALESCE(sm.avg_sentiment_score, 0.0),
-              COALESCE(sm.ticket_count_7d, 0)
+              COALESCE(sm.ticket_count_7d, 0),
+              pd.deal_stage,
+              COALESCE(pd.deal_value, 0)
             FROM customers c
             LEFT JOIN pipeline_deals pd ON pd.customer_id = c.id
             LEFT JOIN support_metrics sm ON sm.customer_id = c.id
@@ -149,9 +151,11 @@ def run(event: dict) -> dict:
 
     today = date.today()
     customers = []
+    raw_by_name = {}
     for row in rows:
         (cust_id, name, arr, renewal_date, health_score,
-         close_probability, sentiment_score, tickets_7d) = row
+         close_probability, sentiment_score, tickets_7d,
+         deal_stage, deal_value) = row
         if renewal_date is None:
             days_to_renewal = 999
         else:
@@ -165,6 +169,16 @@ def run(event: dict) -> dict:
             'sentiment_score': float(sentiment_score),
             'tickets_7d': tickets_7d
         })
+        # Kept out of the prompt payload (the model only reasons about
+        # renewal risk), but re-attached to the output below so the
+        # Orchestrator can see real pipeline signals — e.g. a
+        # high-probability expansion deal — that the model never echoes
+        # back on its own.
+        raw_by_name[name] = {
+            'close_probability': float(close_probability),
+            'deal_stage': deal_stage,
+            'deal_value': float(deal_value)
+        }
 
     user_content = json.dumps(customers)
 
@@ -180,6 +194,8 @@ def run(event: dict) -> dict:
     exposure = float(analysis.get('total_revenue_exposure', 0))
     confidence = float(analysis.get('overall_confidence', 0.5))
     accounts = analysis.get('accounts', [])
+    for a in accounts:
+        a.update(raw_by_name.get(a.get('name'), {}))
     highest = analysis.get('highest_risk_account', 'Unknown')
 
     if exposure > 1_200_000:

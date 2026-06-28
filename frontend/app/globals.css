@@ -45,24 +45,25 @@
   --popover: oklch(0.99 0.002 240);
   --popover-foreground: oklch(0.10 0.008 240);
 
-  /* Royal blue accent — the single Magnivonic signal color */
-  --primary: oklch(0.50 0.22 255);
+  /* Violet accent — one identity, shared with the live platform */
+  --primary: oklch(0.541 0.247 293.0);
   --primary-foreground: oklch(0.99 0.002 240);
 
   --secondary: oklch(0.94 0.005 240);
   --secondary-foreground: oklch(0.24 0.01 240);
 
   --muted: oklch(0.94 0.005 240);
-  --muted-foreground: oklch(0.40 0.014 240);
+  /* Richer secondary text — 8.93:1 → 10.13:1 vs background (was 0.40 0.014 240). */
+  --muted-foreground: oklch(0.37 0.016 255);
 
-  --accent: oklch(0.50 0.22 255);
+  --accent: oklch(0.541 0.247 293.0);
   --accent-foreground: oklch(0.99 0.002 240);
 
   --destructive: oklch(0.60 0.22 25);
 
   --border: oklch(0.88 0.006 240);
   --input: oklch(0.88 0.006 240);
-  --ring: oklch(0.50 0.22 255);
+  --ring: oklch(0.541 0.247 293.0);
 
   --radius: 0.5rem;
 }
@@ -80,7 +81,7 @@
   --popover: oklch(0.12 0.008 240);
   --popover-foreground: oklch(0.985 0.003 210);
 
-  --primary: oklch(0.62 0.22 255);
+  --primary: oklch(0.62 0.24 293);
   --primary-foreground: oklch(0.09 0.006 240);
 
   --secondary: oklch(0.16 0.009 240);
@@ -89,14 +90,85 @@
   --muted: oklch(0.15 0.008 240);
   --muted-foreground: oklch(0.80 0.010 220);
 
-  --accent: oklch(0.60 0.22 255);
+  --accent: oklch(0.62 0.24 293);
   --accent-foreground: oklch(0.96 0.005 210);
 
   --destructive: oklch(0.65 0.22 25);
 
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 10%);
-  --ring: oklch(0.60 0.22 255);
+  --ring: oklch(0.62 0.24 293);
+}
+
+/* ─── LIVE PLATFORM THEME (scoped to frontend_final / Veloquity values) ────
+   The /platform/* subtree adopts Veloquity's full token palette — real violet
+   accent, their neutrals, radius 0.75rem — converted from Veloquity's HSL to
+   this project's OKLCH format. Scoped to .platform-scope (set on
+   app/platform/layout.tsx) so the marketing homepage now shares this violet
+   identity untouched. Light-default (matching Veloquity's own default). */
+.platform-scope {
+  --background: oklch(1 0 0);
+  /* Light-mode dark text/headings — slight nudge blacker (0.137 → 0.12) for
+     a richer, more definite heading contrast. Light block only. */
+  --foreground: oklch(0.12 0.032 258.5);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.12 0.032 258.5);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.12 0.032 258.5);
+  --primary: oklch(0.541 0.247 293.0);
+  --primary-foreground: oklch(0.984 0.003 247.9);
+  --secondary: oklch(0.968 0.007 247.9);
+  --secondary-foreground: oklch(0.208 0.040 265.7);
+  --muted: oklch(0.968 0.007 247.9);
+  /* Light-mode contrast fix: was 0.555 (4.75:1, read faded). Now 7.76:1 vs
+     white — the one authorized .platform-scope light-token change. */
+  --muted-foreground: oklch(0.44 0.034 257.4);
+  --accent: oklch(0.968 0.007 247.9);
+  --accent-foreground: oklch(0.208 0.040 265.7);
+  --destructive: oklch(0.637 0.208 25.3);
+  --border: oklch(0.929 0.013 255.5);
+  --input: oklch(0.929 0.013 255.5);
+  --ring: oklch(0.541 0.247 293.0);
+  --radius: 0.75rem;
+  /* Match Veloquity's real declaration exactly: system-ui, no custom typeface.
+     Overriding the two font vars here re-points only the platform subtree —
+     the marketing homepage (outside .platform-scope) keeps Hanken + JetBrains,
+     which it still needs. The platform's few legitimate monospace spots render
+     in the OS monospace rather than JetBrains. */
+  --font-sans: system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Re-resolve font-family against the scoped --font-sans so descendants
+     inherit system-ui (they'd otherwise inherit body's already-computed
+     Hanken value — redefining the var alone wouldn't take effect). */
+  font-family: var(--font-sans);
+}
+.dark .platform-scope {
+  --background: oklch(0.137 0.036 258.5);
+  --foreground: oklch(0.984 0.003 247.9);
+  --card: oklch(0.137 0.036 258.5);
+  --card-foreground: oklch(0.984 0.003 247.9);
+  --popover: oklch(0.137 0.036 258.5);
+  --popover-foreground: oklch(0.984 0.003 247.9);
+  --primary: oklch(0.491 0.241 292.6);
+  --primary-foreground: oklch(0.984 0.003 247.9);
+  --secondary: oklch(0.280 0.037 260.0);
+  --secondary-foreground: oklch(0.984 0.003 247.9);
+  --muted: oklch(0.280 0.037 260.0);
+  --muted-foreground: oklch(0.711 0.035 256.8);
+  --accent: oklch(0.280 0.037 260.0);
+  --accent-foreground: oklch(0.984 0.003 247.9);
+  --destructive: oklch(0.396 0.133 25.7);
+  --border: oklch(0.280 0.037 260.0);
+  --input: oklch(0.280 0.037 260.0);
+  --ring: oklch(0.491 0.241 292.6);
+}
+
+/* Veloquity's thin 6px scrollbar — scoped to the platform only. */
+.platform-scope ::-webkit-scrollbar { width: 6px; height: 6px; }
+.platform-scope ::-webkit-scrollbar-track { background: transparent; }
+.platform-scope ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.platform-scope ::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklch, var(--muted-foreground) 50%, transparent);
 }
 
 @layer base {
@@ -108,6 +180,9 @@
   }
   html {
     @apply font-sans bg-background;
+    /* Anchor jumps clear the 60px sticky nav (one global source of truth, so
+       per-section scroll-margin isn't needed and can't double up). */
+    scroll-padding-top: 64px;
   }
 }
 

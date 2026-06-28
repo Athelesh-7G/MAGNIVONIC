@@ -25,6 +25,7 @@ def handler(event, context):
             SELECT r.id, r.title, r.severity,
               r.confidence_score, r.revenue_exposure,
               r.root_cause, r.status, r.created_at,
+              r.insight_type,
               json_agg(json_build_object(
                 'department', rec.department,
                 'action', rec.action,

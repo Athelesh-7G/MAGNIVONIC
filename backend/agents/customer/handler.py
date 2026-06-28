@@ -182,6 +182,17 @@ def run(event: dict) -> dict:
         return _fallback_evidence(f"Parse failed: {e}")
 
     accounts = analysis.get('accounts', [])
+    # Re-attach the raw input metrics the model doesn't echo back in its
+    # output schema — the Orchestrator needs positive indicators (high
+    # adoption, positive sentiment) to recognize Opportunity, not just the
+    # derived churn_risk_score.
+    raw_by_name = {c['name']: c for c in customers_data}
+    for a in accounts:
+        raw = raw_by_name.get(a.get('name'), {})
+        a['health_score'] = raw.get('health_score')
+        a['feature_adoption_score'] = raw.get('feature_adoption_score')
+        a['avg_sentiment_score'] = raw.get('avg_sentiment_score')
+        a['nps_score'] = raw.get('nps_score')
     high_risk = len([a for a in analysis.get('accounts', [])
                      if a.get('churn_risk_score', 0) >= 0.25])
     confidence = float(analysis.get('overall_churn_confidence', 0.5))

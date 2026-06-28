@@ -6,7 +6,7 @@ const CASCADE = [
   {
     agent: 'Security',
     time:  'T + 0',
-    signal: 'Unusual access pattern detected on Acme Corp account.',
+    signal: 'Unusual access pattern detected on Vantage Retail Group account.',
     color:  'border-amber-400/60 bg-amber-400/5',
     dot:    'bg-amber-400',
   },
@@ -14,8 +14,8 @@ const CASCADE = [
     agent: 'Customer Success',
     time:  'T + 2 min',
     signal: 'Support ticket volume spikes — three product confusion tickets in 90 minutes.',
-    color:  'border-blue-400/60 bg-blue-400/5',
-    dot:    'bg-blue-400',
+    color:  'border-sky-400/60 bg-sky-400/5',
+    dot:    'bg-sky-400',
   },
   {
     agent: 'Revenue',
@@ -25,14 +25,14 @@ const CASCADE = [
     dot:    'bg-emerald-400',
   },
   {
-    agent: 'Coordinator',
+    agent: 'Chief of Staff',
     time:  'T + 4 min',
     signal: 'Three signals. Same account. Same 48-hour window. Unified picture assembled.',
     color:  'border-primary/60 bg-primary/5',
     dot:    'bg-primary',
   },
   {
-    agent: 'Orchestrator',
+    agent: 'General Manager',
     time:  'T + 5 min',
     signal: 'Single event. Coordinated response issued to Account Executive, Security, and CS — before any team acted alone.',
     color:  'border-primary bg-primary/10',
@@ -74,23 +74,23 @@ export function Proof() {
           </span>
         </div>
 
-        <div className="py-16 grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <div className="py-24 grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
           {/* Left: the narrative */}
           <div>
-            <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted-foreground mb-5">Acme Corp — a real situation</p>
-            <h2 className="text-[clamp(28px,3.2vw,42px)] font-black tracking-[-0.03em] leading-[1.08] text-foreground text-balance">
-              Three teams each saw one piece.
+            <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted-foreground mb-5">Vantage Retail Group — a real situation</p>
+            <h2 className="text-[clamp(28px,3.2vw,42px)] font-bold tracking-[-0.03em] leading-[1.08] text-foreground text-balance">
+              A $1.41M renewal almost slipped through the gaps between three teams.
               <br />
               <span className="text-primary">Magnivonic saw the whole thing.</span>
             </h2>
 
             <div className="mt-8 space-y-5 text-[16px] text-muted-foreground leading-relaxed max-w-[440px]">
               <p>
-                A security irregularity on Acme Corp&apos;s account looked, on its own, like a routine access review. A rise in support tickets at the same account looked, on its own, like a product confusion issue. A renewal sitting on the pipeline looked, on its own, like any other deal.
+                A security irregularity on Vantage Retail Group&apos;s account looked, on its own, like a routine access review. A rise in support tickets at the same account looked, on its own, like a product confusion issue. A renewal sitting on the pipeline looked, on its own, like any other deal.
               </p>
               <p>
-                Magnivonic&apos;s domain agents each saw their own signal. The Coordinator brought them together. The Orchestrator recognized they were the same event — a customer showing friction, confusion, and access concerns simultaneously — and connected it to a renewal at risk.
+                Magnivonic&apos;s domain agents each saw their own signal. The Chief of Staff brought them together. The General Manager recognized they were the same event — a customer showing friction, confusion, and access concerns simultaneously — and connected it to a renewal at risk.
               </p>
               <p>
                 The coordinated response reached the Account Executive, Security team, and Customer Success manager before any of the three had individually escalated. The renewal closed.
@@ -132,9 +132,8 @@ export function Proof() {
                       {step.agent}
                     </span>
                   </div>
-                  <span className="font-mono text-[10px] text-muted-foreground/60">{step.time}</span>
                 </div>
-                <p className={`text-[14px] leading-snug ${step.highlight ? 'text-foreground font-semibold' : 'text-foreground/80'}`}>
+                <p className={`text-[14px] leading-snug ${step.highlight ? 'text-foreground font-semibold' : 'text-foreground/90'}`}>
                   {step.signal}
                 </p>
               </div>

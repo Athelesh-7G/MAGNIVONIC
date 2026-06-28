@@ -1,4 +1,4 @@
-# Seeds Acme Corp cascade demo data
+# Seeds Vantage Retail Group cascade demo data
 """
 Magnivonic demo data seeder.
 
@@ -98,9 +98,12 @@ def seed(conn):
     print("Seeding customers...")
     customers = [
         # (name, arr, renewal_offset_days, health, tier, stage)
-        ("Acme Corp", 500000, 28, 43, "enterprise", "at_risk"),
+        ("Vantage Retail Group", 500000, 28, 43, "enterprise", "at_risk"),
         ("TechFlow Solutions", 420000, 35, 51, "enterprise", "at_risk"),
         ("Meridian Corp", 490000, 42, 58, "growth", "at_risk"),
+        # Healthy/expansion account — seeded so Opportunity is genuinely
+        # classifiable from real agent-read data, not fabricated.
+        ("Continental Logistics", 320000, 75, 88, "growth", "active"),
     ]
     customer_ids = {}
     for name, arr, offset, health, tier, stage in customers:
@@ -128,9 +131,11 @@ def seed(conn):
     # ---- Pipeline deals (1 per customer) ------------------------------
     print("Seeding pipeline_deals...")
     deals = [
-        ("Acme Corp", "Acme Enterprise Renewal Q3", "renewal", 500000, 0.35, 28),
+        ("Vantage Retail Group", "Vantage Enterprise Renewal Q3", "renewal", 500000, 0.35, 28),
         ("TechFlow Solutions", "TechFlow Platform Expansion", "renewal", 420000, 0.45, 35),
         ("Meridian Corp", "Meridian Growth Renewal", "renewal", 490000, 0.52, 42),
+        # Near-certain expansion deal, not a renewal — the real upside signal.
+        ("Continental Logistics", "Continental Platform Expansion", "expansion", 180000, 0.82, 30),
     ]
     for cname, deal_name, stage, value, prob, offset in deals:
         cid = customer_ids[cname]
@@ -154,9 +159,11 @@ def seed(conn):
     print("Seeding support_metrics...")
     metrics = [
         # (cname, tickets7d, prev7d, sentiment, adoption, last_active_offset, nps, escalations)
-        ("Acme Corp", 47, 11, -0.62, 34, 1, 18, 3),
+        ("Vantage Retail Group", 47, 11, -0.62, 34, 1, 18, 3),
         ("TechFlow Solutions", 21, 9, -0.31, 52, 2, 31, 1),
         ("Meridian Corp", 18, 10, -0.28, 61, 1, 35, 1),
+        # Falling ticket volume, positive sentiment, high adoption — a thriving account.
+        ("Continental Logistics", 6, 8, 0.55, 84, 1, 72, 0),
     ]
     for cname, t7, tprev, sentiment, adoption, last_off, nps, esc in metrics:
         cid = customer_ids[cname]
@@ -181,9 +188,10 @@ def seed(conn):
     print("Seeding security_events...")
     sec = [
         # (cname, api_calls, baseline, anomaly, outside_hours, export_mb, failed, ips)
-        ("Acme Corp", 847, 12, 0.94, True, 2847.3, 23, 7),
+        ("Vantage Retail Group", 847, 12, 0.94, True, 2847.3, 23, 7),
         ("TechFlow Solutions", 28, 19, 0.18, False, 142.1, 2, 1),
         ("Meridian Corp", 22, 17, 0.14, False, 98.4, 1, 0),
+        ("Continental Logistics", 30, 28, 0.05, False, 45.0, 0, 0),
     ]
     for cname, api_calls, baseline, anomaly, outside, export_mb, failed, ips in sec:
         cid = customer_ids[cname]

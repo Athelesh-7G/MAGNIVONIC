@@ -61,10 +61,12 @@ AGENT_MEMORIES=(512 256 256 256 256 256)
 
 for i in {1..${#AGENT_NAMES[@]}}; do
   FUNC_NAME="magnivonic-${AGENT_NAMES[$i]}-agent"
-  HANDLER_FILE="${BACKEND_DIR}/agents/${AGENT_DIRS[$i]}/handler.py"
+  AGENT_SRC_DIR="${BACKEND_DIR}/agents/${AGENT_DIRS[$i]}"
   FUNC_TMPDIR=$(mktemp -d)
-  cp $HANDLER_FILE "${FUNC_TMPDIR}/handler.py"
-  cd $FUNC_TMPDIR && zip -r func.zip handler.py -q && cd -
+  # Bundle every .py file alongside handler.py (e.g. operations/github_client.py) —
+  # only the shared layer modules belong in the layer zip, not per-agent helpers.
+  cp "${AGENT_SRC_DIR}/"*.py "${FUNC_TMPDIR}/"
+  cd $FUNC_TMPDIR && zip -r func.zip ./*.py -q && cd -
 
   if aws lambda get-function --function-name $FUNC_NAME \
        --region $REGION > /dev/null 2>&1; then

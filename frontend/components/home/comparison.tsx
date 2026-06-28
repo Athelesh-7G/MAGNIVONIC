@@ -3,13 +3,17 @@
 import { Reveal } from '@/components/reveal'
 
 const ROWS = [
-  { feature: 'Cross-domain signal reading',      traditional: false, magnivonic: true  },
-  { feature: 'Continuous — not on schedule',      traditional: false, magnivonic: true  },
-  { feature: 'Multi-agent coordination',          traditional: false, magnivonic: true  },
-  { feature: 'Organizational memory',             traditional: false, magnivonic: true  },
-  { feature: 'Department-level action routing',   traditional: false, magnivonic: true  },
-  { feature: 'Proactive — not reactive',          traditional: false, magnivonic: true  },
-  { feature: 'Single synthesized understanding',  traditional: false, magnivonic: true  },
+  { feature: 'Cross-domain signal reading',          traditional: false, magnivonic: true },
+  { feature: 'Four insight types — not just alerts',  traditional: false, magnivonic: true },
+  { feature: 'Cited, grounded answers (not a black box)', traditional: false, magnivonic: true },
+  { feature: 'Continuous — not on schedule',          traditional: false, magnivonic: true },
+  { feature: 'Multi-agent coordination',              traditional: false, magnivonic: true },
+  { feature: 'Per-team scoped intelligence',          traditional: false, magnivonic: true },
+  { feature: 'Organizational memory',                 traditional: false, magnivonic: true },
+  { feature: 'No data migration — reads tools you already run', traditional: false, magnivonic: true },
+  { feature: 'Department-level action routing',       traditional: false, magnivonic: true },
+  { feature: 'Proactive — not reactive',              traditional: false, magnivonic: true },
+  { feature: 'Single synthesized understanding',      traditional: false, magnivonic: true },
 ]
 
 function Check() {
@@ -32,7 +36,7 @@ function Cross() {
 
 export function Comparison() {
   return (
-    <section id="why" className="bg-background border-t border-border scroll-mt-20">
+    <section id="why" className="bg-background border-t border-border">
       <div className="max-w-[1280px] mx-auto px-8">
         <div className="flex items-center border-b border-border py-4">
           <span className="font-mono text-[11px] tracking-[0.25em] uppercase text-muted-foreground">
@@ -40,11 +44,11 @@ export function Comparison() {
           </span>
         </div>
 
-        <div className="py-16 grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <div className="py-24 grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
           <Reveal>
-            <h2 className="text-[clamp(28px,3.2vw,42px)] font-black tracking-[-0.03em] leading-[1.08] text-foreground text-balance">
-              Fundamentally different from everything your organization already runs.
+            <h2 className="text-[clamp(28px,3.2vw,42px)] font-bold tracking-[-0.03em] leading-[1.08] text-foreground text-balance">
+              Dashboards report the past. Magnivonic prevents the future.
             </h2>
             <p className="mt-4 text-[17px] text-muted-foreground leading-relaxed max-w-[400px]">
               Dashboards show you one domain at a time, and only when you go looking. Magnivonic reasons across all of them at once, continuously — and remembers what it learned.
@@ -67,7 +71,7 @@ export function Comparison() {
                 y={12}
                 className="grid grid-cols-[1fr_120px_140px] gap-4 py-3.5 border-b border-border/50 items-center transition-colors hover:bg-muted/40 rounded-lg"
               >
-                <span className="text-[14px] text-foreground/80">{feature}</span>
+                <span className="text-[14px] text-foreground/90">{feature}</span>
                 <div className="flex justify-center">
                   {traditional ? <Check /> : <Cross />}
                 </div>

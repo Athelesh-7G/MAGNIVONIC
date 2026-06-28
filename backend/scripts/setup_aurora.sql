@@ -103,6 +103,8 @@ CREATE TABLE IF NOT EXISTS risks (
     affected_customer_ids UUID[] DEFAULT '{}',
     contributing_agents TEXT[] DEFAULT '{}',
     status TEXT DEFAULT 'active',
+    insight_type TEXT NOT NULL DEFAULT 'Risk'
+      CHECK (insight_type IN ('Risk','Opportunity','CoordinationGap','Drift')),
     resolved_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );

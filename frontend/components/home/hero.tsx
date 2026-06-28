@@ -1,5 +1,7 @@
 'use client'
 
+import { useRef } from 'react'
+import { motion, useMotionValue, useMotionTemplate, useScroll, useTransform } from 'framer-motion'
 import { SignalFlow } from './signal-flow'
 
 const MARQUEE_ITEMS = [
@@ -14,14 +16,33 @@ const MARQUEE_ITEMS = [
 const LOOP = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
 
 export function Hero() {
+  const ref = useRef<HTMLElement>(null)
+  // Mouse-follow spotlight (Veloquity's hero pattern) + scroll parallax on the
+  // animation layer — purposeful depth, not decoration.
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const spotlight = useMotionTemplate`radial-gradient(560px circle at ${mouseX}px ${mouseY}px, oklch(0.54 0.25 293 / 0.10), transparent 72%)`
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
+  const flowY = useTransform(scrollYProgress, [0, 1], [0, 110])
+
   return (
-    <section className="relative min-h-screen flex flex-col bg-background overflow-hidden">
+    <section
+      ref={ref}
+      onMouseMove={(e) => {
+        const r = e.currentTarget.getBoundingClientRect()
+        mouseX.set(e.clientX - r.left)
+        mouseY.set(e.clientY - r.top)
+      }}
+      className="relative min-h-screen flex flex-col bg-background overflow-hidden"
+    >
       {/* ── Background layers ── */}
       <div aria-hidden className="absolute inset-0 dot-grid" />
-      {/* The signature animation — full-bleed, signals converging to one core */}
-      <div aria-hidden className="absolute inset-0">
+      {/* The signature animation — full-bleed, drifts gently on scroll */}
+      <motion.div aria-hidden className="absolute inset-0" style={{ y: flowY }}>
         <SignalFlow variant="light" />
-      </div>
+      </motion.div>
+      {/* Mouse-follow violet spotlight */}
+      <motion.div aria-hidden className="pointer-events-none absolute inset-0 hidden md:block" style={{ background: spotlight }} />
       {/* Vertical mask: keep the headline zone clean, let streams glow lower */}
       <div
         aria-hidden
@@ -66,12 +87,13 @@ export function Hero() {
 
         {/* Subtitle — one coherent thought */}
         <p
-          className="mt-7 text-[18px] leading-relaxed text-muted-foreground max-w-[680px] mx-auto text-pretty animate-fade-up"
+          className="mt-7 text-[19px] md:text-[20px] leading-relaxed text-muted-foreground max-w-[860px] mx-auto text-pretty animate-fade-up"
           style={{ animationDelay: '0.12s' }}
         >
-          Magnivonic gives leadership multi-agent monitoring, cross-domain correlation, and
-          early risk detection across sales, engineering, support, and security &mdash; all built in.
-          Catches problems before humans notice. Works above every tool you already run.
+          Magnivonic reads every team your business runs on &mdash; sales, engineering, support,
+          security &mdash; and reasons across them to surface what no single team sees on its own:
+          risks, opportunities, and coordination gaps. Each finding is carried through to a clear,
+          evidence-backed recommendation for the people who decide.
         </p>
 
         {/* CTAs */}
@@ -79,18 +101,13 @@ export function Hero() {
           className="mt-9 flex items-center justify-center gap-3 flex-wrap animate-fade-up"
           style={{ animationDelay: '0.19s' }}
         >
-          {/* Launch Platform — disabled until the live dashboard ships */}
-          <span
-            role="button"
-            aria-disabled="true"
-            title="Coming soon"
-            className="h-12 px-6 inline-flex items-center gap-2 bg-primary/60 text-primary-foreground text-[15px] font-semibold rounded-xl cursor-not-allowed select-none shadow-[0_8px_30px_-8px_oklch(0.50_0.22_255/0.5)]"
+          <a
+            href="/platform"
+            className="h-12 px-6 inline-flex items-center gap-2 bg-primary text-primary-foreground text-[15px] font-semibold rounded-xl hover:bg-primary/90 transition-colors shadow-[0_8px_30px_-8px_oklch(0.50_0.24_293/0.5)]"
           >
             Launch Platform
-            <span className="text-[11px] font-mono uppercase tracking-wider opacity-80 border border-primary-foreground/30 rounded px-1.5 py-0.5">
-              Coming soon
-            </span>
-          </span>
+            <span>→</span>
+          </a>
           <a
             href="#how-it-works"
             className="h-12 px-6 inline-flex items-center border border-border bg-card/70 backdrop-blur-sm text-foreground text-[15px] font-medium rounded-xl hover:bg-muted transition-colors"
@@ -101,10 +118,10 @@ export function Hero() {
 
         {/* Continuous marquee — part of the centered group, no dead gap */}
         <div
-          className="w-full max-w-[940px] mx-auto mt-14 animate-fade-up"
+          className="w-full max-w-[940px] mx-auto mt-8 animate-fade-up"
           style={{ animationDelay: '0.26s' }}
         >
-          <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-4">
+          <p className="font-mono text-[13px] tracking-[0.25em] uppercase text-foreground/70 mb-4">
             Built for every kind of organization, in every industry
           </p>
           <div className="border-y border-border py-4 relative overflow-hidden group">
@@ -114,7 +131,7 @@ export function Hero() {
             <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
               {LOOP.map((item, i) => (
                 <div key={i} className="flex items-center shrink-0">
-                  <span className="text-[15px] font-semibold text-foreground/90 tracking-tight px-6 whitespace-nowrap">
+                  <span className="text-[18px] font-semibold text-foreground/90 tracking-tight px-6 whitespace-nowrap">
                     {item}
                   </span>
                   <span className="w-1.5 h-1.5 rounded-full bg-primary/50 select-none" />

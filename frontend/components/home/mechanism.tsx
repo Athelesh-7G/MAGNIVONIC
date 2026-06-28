@@ -12,8 +12,8 @@ const DOMAIN_AGENTS = [
 
 const TIERS = [
   { tier: '01', label: 'Domain Agents', desc: 'Four specialists, each fluent in its own area.' },
-  { tier: '02', label: 'Coordinator',   desc: 'Gathers all four signals into one unified picture.' },
-  { tier: '03', label: 'Orchestrator',  desc: 'Connects the dots. Produces the decision.' },
+  { tier: '02', label: 'Chief of Staff', desc: 'Gathers all four signals into one unified picture.' },
+  { tier: '03', label: 'General Manager', desc: 'Connects the dots. Produces the decision.' },
 ]
 
 export function Mechanism() {
@@ -39,14 +39,14 @@ export function Mechanism() {
   }, [live])
 
   return (
-    <section id="platform" className="relative bg-[#060912] overflow-hidden border-y border-white/[0.06] scroll-mt-[60px]">
+    <section id="platform" className="relative bg-[#060912] overflow-hidden border-y border-white/[0.06]">
       {/* Subtle blue radial glow */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 80% 60% at 50% 30%, oklch(0.50 0.22 255 / 0.08) 0%, transparent 70%)',
+            'radial-gradient(ellipse 80% 60% at 50% 30%, oklch(0.50 0.24 293 / 0.08) 0%, transparent 70%)',
         }}
       />
 
@@ -61,15 +61,15 @@ export function Mechanism() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left: text */}
           <Reveal>
-            <h2 className="text-[clamp(28px,3.2vw,42px)] font-black tracking-[-0.03em] leading-[1.08] text-white text-balance">
-              Four agents reading. One system{' '}
-              <span className="text-primary">deciding.</span>
+            <h2 className="text-[clamp(28px,3.2vw,42px)] font-bold tracking-[-0.03em] leading-[1.08] text-white text-balance">
+              Four specialists. Two layers of reasoning.{' '}
+              <span className="text-primary">One recommendation you can stand behind.</span>
             </h2>
             <p className="mt-6 text-[17px] text-white/70 leading-relaxed max-w-[460px]">
-              Domain agents run continuously across Revenue, Security, Customer Success,
-              and Operations. A Coordinator gathers their signals in parallel. The
-              Orchestrator reasons across all of it &mdash; connecting what no single team
-              can see alone.
+              Four domain agents each read their corner of the business in parallel. A Chief of Staff
+              assembles what they found into one picture. A General Manager reasons across it and produces
+              the recommendation &mdash; the evidence, the cross-domain connections, and the suggested move
+              &mdash; for the people who actually make the call.
             </p>
 
             <div className="mt-10 space-y-5">
@@ -100,10 +100,10 @@ export function Mechanism() {
                       className="rounded-xl border px-4 py-3.5 transition-all duration-500"
                       style={{
                         borderColor: active
-                          ? 'oklch(0.60 0.22 255 / 0.6)'
+                          ? 'oklch(0.60 0.24 293 / 0.6)'
                           : 'oklch(1 0 0 / 0.1)',
                         background: active
-                          ? 'oklch(0.50 0.22 255 / 0.14)'
+                          ? 'oklch(0.50 0.24 293 / 0.14)'
                           : 'oklch(1 0 0 / 0.03)',
                       }}
                     >
@@ -112,7 +112,7 @@ export function Mechanism() {
                           className="w-1.5 h-1.5 rounded-full transition-colors duration-500"
                           style={{
                             background: active
-                              ? 'oklch(0.70 0.22 255)'
+                              ? 'oklch(0.70 0.24 293)'
                               : 'oklch(1 0 0 / 0.35)',
                           }}
                         />
@@ -126,25 +126,25 @@ export function Mechanism() {
                 })}
               </div>
 
-              {/* Connector down to coordinator */}
+              {/* Connector down to chief of staff */}
               <Connector active={live} />
 
-              {/* Tier 2 — coordinator */}
+              {/* Tier 2 — chief of staff */}
               <div className="w-full max-w-[300px] rounded-xl border border-primary/45 bg-primary/[0.12] px-5 py-3.5 text-center">
-                <p className="text-[15px] font-bold text-white leading-none">Coordinator</p>
+                <p className="text-[15px] font-bold text-white leading-none">Chief of Staff</p>
                 <p className="font-mono text-[10px] text-primary/80 mt-1.5">Unified picture assembled</p>
               </div>
 
-              {/* Connector down to orchestrator */}
+              {/* Connector down to general manager */}
               <Connector active={live} />
 
-              {/* Tier 3 — orchestrator */}
-              <div className="w-full max-w-[340px] rounded-2xl bg-primary px-6 py-4 text-center shadow-[0_8px_40px_-8px_oklch(0.50_0.22_255/0.6)]">
+              {/* Tier 3 — general manager */}
+              <div className="w-full max-w-[340px] rounded-2xl bg-primary px-6 py-4 text-center shadow-[0_8px_40px_-8px_oklch(0.50_0.24_293/0.6)]">
                 <p className="text-[17px] font-black text-primary-foreground leading-none">
-                  Orchestrator
+                  General Manager
                 </p>
                 <p className="font-mono text-[10px] text-primary-foreground/70 mt-2 tracking-wide">
-                  Decision · Action
+                  Risk · Opportunity · Coordination Gap · Drift
                 </p>
               </div>
             </div>
@@ -165,7 +165,7 @@ function Connector({ active }: { active: boolean }) {
           className="absolute left-1/2 -translate-x-1/2 w-1 h-4 rounded-full"
           style={{
             background:
-              'linear-gradient(to bottom, transparent, oklch(0.70 0.22 255), transparent)',
+              'linear-gradient(to bottom, transparent, oklch(0.70 0.24 293), transparent)',
             animation: 'pulse-travel 1.6s linear infinite',
           }}
         />

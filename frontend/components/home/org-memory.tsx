@@ -47,13 +47,13 @@ export function OrgMemory() {
   }, [])
 
   return (
-    <section id="org-memory" className="relative bg-[#060912] border-y border-white/[0.06] overflow-hidden scroll-mt-20">
+    <section id="org-memory" className="relative bg-[#060912] border-y border-white/[0.06] overflow-hidden">
       {/* Blue radial */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse 60% 50% at 70% 50%, oklch(0.50 0.22 255 / 0.09) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 60% 50% at 70% 50%, oklch(0.50 0.24 293 / 0.09) 0%, transparent 70%)',
         }}
       />
 
@@ -68,13 +68,13 @@ export function OrgMemory() {
 
           {/* Left: text */}
           <div>
-            <h2 className="text-[clamp(28px,3.2vw,42px)] font-black tracking-[-0.03em] leading-[1.08] text-white text-balance">
-              The organization remembers.
+            <h2 className="text-[clamp(28px,3.2vw,42px)] font-bold tracking-[-0.03em] leading-[1.08] text-white text-balance">
+              Every decision makes
               <br />
-              <span className="text-primary">So every decision compounds.</span>
+              <span className="text-primary">the next one sharper.</span>
             </h2>
-            <p className="mt-6 text-[17px] text-white/70 leading-relaxed max-w-[420px]">
-              The Orchestrator reasons over what is happening now — and what has happened before. Every situation is matched against the organization&apos;s own history of similar events, what actions were taken, and what was learned. The longer Magnivonic runs, the more precisely it reasons.
+            <p className="mt-6 text-[17px] text-white/70 leading-relaxed max-w-[440px]">
+              Every situation is matched against the organization&apos;s own history — what happened, what was done, what it cost. Recall runs as a pgvector similarity search on Aurora, so each decision makes the next one sharper. The longer Magnivonic runs, the more it knows.
             </p>
             <div className="mt-10 flex items-start gap-4">
               <div className="w-px h-16 bg-primary/60 mt-1 shrink-0" />
@@ -95,12 +95,12 @@ export function OrgMemory() {
                   className="rounded-xl border px-5 py-4 transition-all duration-700"
                   style={{
                     borderColor: isCurrent
-                      ? 'oklch(0.50 0.22 255 / 0.7)'
+                      ? 'oklch(0.50 0.24 293 / 0.7)'
                       : isVisible
                       ? 'oklch(1 0 0 / 0.12)'
                       : 'oklch(1 0 0 / 0.05)',
                     background: isCurrent
-                      ? 'oklch(0.50 0.22 255 / 0.12)'
+                      ? 'oklch(0.50 0.24 293 / 0.12)'
                       : isVisible
                       ? 'oklch(1 0 0 / 0.03)'
                       : 'transparent',
@@ -111,7 +111,7 @@ export function OrgMemory() {
                   <div className="flex items-center justify-between mb-2">
                     <span
                       className="font-mono text-[10px] tracking-[0.2em] uppercase font-semibold"
-                      style={{ color: isCurrent ? 'oklch(0.70 0.22 255)' : 'oklch(1 0 0 / 0.3)' }}
+                      style={{ color: isCurrent ? 'oklch(0.70 0.24 293)' : 'oklch(1 0 0 / 0.3)' }}
                     >
                       {stage}
                     </span>
@@ -135,7 +135,7 @@ export function OrgMemory() {
                   className="w-px transition-all duration-700"
                   style={{
                     height: '0px',
-                    background: 'oklch(0.50 0.22 255 / 0.3)',
+                    background: 'oklch(0.50 0.24 293 / 0.3)',
                     display: 'none',
                   }}
                 />

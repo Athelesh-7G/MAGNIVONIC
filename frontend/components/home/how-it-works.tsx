@@ -6,8 +6,8 @@ const STEPS = [
   {
     index: '01',
     slug:  'SENSE',
-    headline: 'Four agents read the organization as it happens.',
-    body: 'Revenue, Operations, Security, and Customer Success agents run continuously — each fluent in its own domain, reading the signals that matter there the moment they change.',
+    headline: 'Nothing in the organization goes unread.',
+    body: 'Magnivonic reads the tools you already run — CRM, GitHub, support, security. Nothing to upload, nothing to migrate: you confirm the connections, and the domain agents start reading the signals that matter, the moment they change.',
     visual: (
       <div className="bg-primary h-full min-h-[280px] rounded-xl p-8 flex flex-col justify-between relative overflow-hidden">
         {/* Corner markers like Supermemory */}
@@ -34,8 +34,8 @@ const STEPS = [
   {
     index: '02',
     slug:  'GATHER',
-    headline: 'A Coordinator collects all four signals in parallel.',
-    body: 'The Coordinator agent receives what every domain agent is seeing — simultaneously — and assembles them into one unified picture of the organization at that moment.',
+    headline: 'Every signal, unified the moment it appears.',
+    body: 'The Chief of Staff agent receives what every domain agent is seeing — simultaneously — and assembles them into one unified picture of the organization at that moment.',
     visual: (
       <div className="bg-[#060912] border border-white/[0.07] h-full min-h-[280px] rounded-xl p-8 flex items-center gap-5 relative overflow-hidden">
         <span className="absolute top-3 left-3 w-2 h-2 border-t border-l border-white/10" />
@@ -64,10 +64,10 @@ const STEPS = [
           <span className="font-mono text-[13px] leading-none">&rarr;</span>
         </div>
 
-        {/* Coordinator output card */}
+        {/* Chief of Staff output card */}
         <div className="flex-1 rounded-xl border border-primary/40 bg-primary/[0.08] px-4 py-5 text-center">
           <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-primary/80 block mb-1.5">
-            Coordinator
+            Chief of Staff
           </span>
           <p className="text-[13px] font-semibold text-white leading-snug">One unified picture</p>
           <p className="text-[11px] text-white/55 mt-1">4 signals · assembled in parallel</p>
@@ -78,8 +78,8 @@ const STEPS = [
   {
     index: '03',
     slug:  'CONNECT',
-    headline: 'The Orchestrator finds what no single team could see.',
-    body: 'The Orchestrator reasons across the unified picture — finding the moment signals that looked unrelated in isolation are actually the same event, requiring a coordinated response.',
+    headline: 'It connects what no single team could see.',
+    body: 'The General Manager reasons across the unified picture — finding the moment signals that looked unrelated in isolation are actually the same event, requiring a coordinated response.',
     visual: (
       <div className="bg-primary h-full min-h-[280px] rounded-xl p-8 relative overflow-hidden">
         <span className="absolute top-3 left-3 w-2 h-2 border-t border-l border-white/30" />
@@ -101,7 +101,7 @@ const STEPS = [
             <p className="text-white text-sm mt-0.5">Renewal at risk — same account</p>
           </div>
           <div className="rounded-lg bg-white/25 border border-white/30 px-4 py-3">
-            <p className="font-mono text-[10px] text-white/60 uppercase tracking-widest">Orchestrator</p>
+            <p className="font-mono text-[10px] text-white/60 uppercase tracking-widest">General Manager</p>
             <p className="text-white text-sm font-semibold mt-0.5">Same event. Coordinated response needed.</p>
           </div>
         </div>
@@ -129,7 +129,7 @@ const STEPS = [
               <div className="flex items-center justify-between mb-1">
                 <span
                   className="font-mono text-[10px] tracking-[0.2em] uppercase font-semibold"
-                  style={{ color: row.accent ? 'oklch(0.70 0.22 255)' : 'oklch(1 0 0 / 0.35)' }}
+                  style={{ color: row.accent ? 'oklch(0.70 0.24 293)' : 'oklch(1 0 0 / 0.35)' }}
                 >
                   {row.tag}
                 </span>
@@ -153,7 +153,7 @@ const STEPS = [
     index: '05',
     slug:  'ACT',
     headline: 'One synthesized understanding becomes department-level action.',
-    body: 'A single, coordinated understanding reaches every relevant team with specific recommended actions — not a report to be reviewed, but a directive delivered the moment it matters.',
+    body: 'A single, coordinated understanding reaches every relevant team with specific recommended actions — a directive delivered the moment it matters, not a report to be reviewed. And anyone can ask in plain language and get an answer that shows its sources first — every claim traced to the live evidence and the past incidents behind it.',
     visual: (
       <div className="bg-primary h-full min-h-[280px] rounded-xl p-8 relative overflow-hidden">
         <span className="absolute top-3 left-3 w-2 h-2 border-t border-l border-white/30" />
@@ -192,9 +192,9 @@ export function HowItWorks() {
       <div className="max-w-[1280px] mx-auto px-8 py-6 space-y-0">
 
         {/* Section intro */}
-        <div className="py-14 max-w-xl">
-          <h2 className="text-[clamp(28px,3.2vw,42px)] font-black tracking-[-0.03em] leading-[1.08] text-foreground text-balance">
-            Five steps. One system.
+        <div className="py-16 max-w-xl">
+          <h2 className="text-[clamp(28px,3.2vw,42px)] font-bold tracking-[-0.03em] leading-[1.08] text-foreground text-balance">
+            From scattered signals to a decision your teams can act on.
           </h2>
           <p className="mt-4 text-[17px] text-muted-foreground leading-relaxed">
             Sense, gather, connect, remember, act. The full cycle runs continuously — not on a schedule, not on request.
@@ -213,7 +213,7 @@ export function HowItWorks() {
                     {step.index} / {step.slug}
                   </span>
                 </div>
-                <h3 className="text-[32px] font-black tracking-[-0.025em] leading-[1.1] text-foreground text-balance">
+                <h3 className="text-[32px] font-bold tracking-[-0.025em] leading-[1.1] text-foreground text-balance">
                   {step.headline}
                 </h3>
                 <p className="mt-4 text-[16px] text-muted-foreground leading-relaxed max-w-[420px]">
