@@ -50,9 +50,9 @@ export function Mechanism() {
         }}
       />
 
-      <div className="relative max-w-[1280px] mx-auto px-8 py-24">
+      <div className="relative max-w-[1280px] mx-auto px-8 pt-14 pb-24">
         {/* Section label row */}
-        <div className="flex items-center mb-16 border-b border-white/[0.08] pb-4">
+        <div className="flex items-center mb-10 border-b border-white/[0.08] pb-4">
           <span className="font-mono text-[11px] tracking-[0.25em] uppercase text-white/55">
             {'>'} The Architecture
           </span>
@@ -68,8 +68,8 @@ export function Mechanism() {
             <p className="mt-6 text-[17px] text-white/70 leading-relaxed max-w-[460px]">
               Four domain agents each read their corner of the business in parallel. A Chief of Staff
               assembles what they found into one picture. A General Manager reasons across it and produces
-              the recommendation &mdash; the evidence, the cross-domain connections, and the suggested move
-              &mdash; for the people who actually make the call.
+              the recommendation &ndash; the evidence, the cross-domain connections, and the suggested move
+              &ndash; for the people who actually make the call.
             </p>
 
             <div className="mt-10 space-y-5">
@@ -87,10 +87,10 @@ export function Mechanism() {
             </div>
           </Reveal>
 
-          {/* Right: clean HTML flow diagram — no overflow, fully legible */}
+          {/* Right: clean HTML flow diagram – no overflow, fully legible */}
           <Reveal delay={0.1}>
             <div ref={ref} className="flex flex-col items-center">
-              {/* Tier 1 — domain agents */}
+              {/* Tier 1 – domain agents */}
               <div className="grid grid-cols-2 gap-3 w-full max-w-[440px]">
                 {DOMAIN_AGENTS.map((a, i) => {
                   const active = live && tick === i
@@ -129,7 +129,7 @@ export function Mechanism() {
               {/* Connector down to chief of staff */}
               <Connector active={live} />
 
-              {/* Tier 2 — chief of staff */}
+              {/* Tier 2 – chief of staff */}
               <div className="w-full max-w-[300px] rounded-xl border border-primary/45 bg-primary/[0.12] px-5 py-3.5 text-center">
                 <p className="text-[15px] font-bold text-white leading-none">Chief of Staff</p>
                 <p className="font-mono text-[10px] text-primary/80 mt-1.5">Unified picture assembled</p>
@@ -138,7 +138,7 @@ export function Mechanism() {
               {/* Connector down to general manager */}
               <Connector active={live} />
 
-              {/* Tier 3 — general manager */}
+              {/* Tier 3 – general manager */}
               <div className="w-full max-w-[340px] rounded-2xl bg-primary px-6 py-4 text-center shadow-[0_8px_40px_-8px_oklch(0.50_0.24_293/0.6)]">
                 <p className="text-[17px] font-black text-primary-foreground leading-none">
                   General Manager
@@ -155,7 +155,7 @@ export function Mechanism() {
   )
 }
 
-/** Vertical connector with a travelling pulse — pure CSS, never overflows. */
+/** Vertical connector with a travelling pulse – pure CSS, never overflows. */
 function Connector({ active }: { active: boolean }) {
   return (
     <div className="relative h-12 w-px my-1 overflow-hidden" aria-hidden>

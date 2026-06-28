@@ -7,19 +7,19 @@ const DOMAINS = [
     index: '01',
     name: 'Revenue Protection',
     phrase: 'Every deal. Every signal. Nothing missed.',
-    detail: 'Pipeline drift, champion changes, competitive activity, and usage drops — surfaced the moment they matter to a renewal outcome.',
+    detail: 'Pipeline drift, champion changes, competitive activity, and usage drops – surfaced the moment they matter to a renewal outcome.',
   },
   {
     index: '02',
     name: 'Security Intelligence',
     phrase: 'Anomalies understood in business context.',
-    detail: 'Access irregularities connected to customer health, contract status, and operational state — so security events carry the meaning the business needs.',
+    detail: 'Access irregularities connected to customer health, contract status, and operational state – so security events carry the meaning the business needs.',
   },
   {
     index: '03',
     name: 'Churn Prevention',
     phrase: 'The whole account, not the last ticket.',
-    detail: 'Support patterns, product usage, sentiment, and commercial signals assembled into one health picture — before the conversation arrives too late.',
+    detail: 'Support patterns, product usage, sentiment, and commercial signals assembled into one health picture – before the conversation arrives too late.',
   },
   {
     index: '04',
@@ -46,7 +46,7 @@ export function Capabilities() {
               <span className="text-primary">Four domains.</span>
             </h2>
             <p className="mt-4 text-[17px] text-muted-foreground leading-relaxed">
-              These are the applications of the operating system — what happens when specialized intelligence runs continuously across each part of your organization.
+              These are the applications of the operating system – what happens when specialized intelligence runs continuously across each part of your organization.
             </p>
           </div>
 

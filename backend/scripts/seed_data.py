@@ -217,45 +217,31 @@ def seed(conn):
     cur.execute("SELECT COUNT(*) FROM organizational_memory")
     existing = cur.fetchone()[0]
     if existing < 5:
-        embedding_str = "[" + ",".join(["0.0"] * 1536) + "]"
+        embedding_str = "[" + ",".join(["0.0"] * 1024) + "]"
         memories = [
             (
-                "TechFlow API regression caused support spike. Deployment "
-                "v2.8 introduced auth timeout bug. CS health dropped from 74 "
-                "to 41 in 48hrs.",
-                "Rolled back v2.8. Executive call within 2 hours prevented "
-                "churn. Health recovered to 68 within 7 days.",
+                "TechFlow Solutions hit a wave of support tickets within hours of the v2.8 deployment — an authentication-timeout bug was silently logging enterprise users out mid-session. Health fell from 74 to 41 over 48 hours as the ticket queue tripled and sentiment turned sharply negative.",
+                "Engineering rolled back v2.8 the same afternoon and the AE got an executive on the phone within two hours to own the disruption. With the regression reversed and a credit offered, health recovered to 68 within seven days and the renewal closed on schedule.",
                 6, True, 420000, ["revenue", "operations", "customer"],
             ),
             (
-                "Meridian API key compromise. Unusual export volume 3400MB in "
-                "6 hours. Access from 14 unrecognized IPs across 3 countries.",
-                "Key rotated proactively. No data breach confirmed. Customer "
-                "notified within 1 hour. Retained with security audit offering.",
+                "Meridian Corp's production API key was exercised from 14 unrecognized IP addresses across three countries, exporting 3.4GB in a six-hour window — roughly twenty times the account's normal daily volume. The pattern matched a leaked-credential signature, not the customer's own integration.",
+                "Security rotated the key proactively and walked Meridian's team through the access logs before they'd noticed anything themselves. Forensics confirmed no data left the platform; the account was retained and took up a quarterly security-audit offering.",
                 2, True, 490000, ["security", "customer"],
             ),
             (
-                "Sprint delay on critical onboarding feature blocked 3 "
-                "enterprise accounts from going live. 45-day commitment missed "
-                "by 12 days.",
-                "Dedicated sprint assigned. Weekly exec reviews. 2 of 3 "
-                "accounts retained, 1 churned ($180K ARR loss).",
+                "A slipped sprint on the new onboarding flow held up go-live for three enterprise accounts promised a 45-day implementation. The deadline was missed by 12 days, and one account had already scheduled an internal launch around the original date.",
+                "A dedicated sprint and weekly executive check-ins recovered the work. Two of the three stayed and went live a fortnight late; the third — the one with the internal launch riding on the date — churned, a $180K ARR loss a tighter delivery commitment would have prevented.",
                 288, False, 0, ["operations", "revenue", "customer"],
             ),
             (
-                "Q4 renewal cluster: 4 accounts totaling $1.2M ARR with health "
-                "scores below 55 entering 60-day renewal window "
-                "simultaneously.",
-                "Executive success program launched. Dedicated CSM assigned to "
-                "each. All 4 renewed, 2 expanded. Net revenue impact +$180K.",
+                "Four accounts worth a combined $1.2M ARR entered their 60-day renewal windows in the same Q4 fortnight, every one carrying a health score below 55. On their own each looked manageable; together they were a concentrated revenue risk no single CSM was tracking.",
+                "An executive success program put a dedicated CSM on each with a tailored save plan. All four renewed and two expanded, turning $1.2M of exposure into a net +$180K — spotting the cluster as one event, not four, was what made the difference.",
                 720, True, 1200000, ["revenue", "customer", "operations"],
             ),
             (
-                "Database migration caused 4-hour downtime for enterprise tier. "
-                "12 customers affected. SLA breach triggered penalty clauses.",
-                "SLA credits issued. Post-mortem published. Infrastructure "
-                "hardened. 11 of 12 customers retained after direct CEO "
-                "outreach.",
+                "A planned database migration overran into a four-hour outage on the enterprise tier, taking 12 customers offline during business hours and breaching the uptime SLA on every one of their contracts, triggering penalty clauses.",
+                "SLA credits went out the same day and a public post-mortem followed, with the infrastructure hardened to make the failure mode impossible to repeat. Direct CEO outreach retained 11 of the 12; the one departure had already been evaluating alternatives.",
                 4, False, 0, ["security", "operations", "customer"],
             ),
         ]
@@ -270,6 +256,34 @@ def seed(conn):
                 """,
                 (summary, outcome, hours, churn, saved, agents, embedding_str),
             )
+
+    # ---- Support tickets (real textual tickets, not just counts) ------
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS support_tickets (
+            id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+            created_at  timestamptz NOT NULL DEFAULT now(),
+            account     text NOT NULL,
+            subject     text NOT NULL,
+            body        text NOT NULL,
+            sentiment   text
+        )
+    """)
+    cur.execute("SELECT COUNT(*) FROM support_tickets")
+    if cur.fetchone()[0] == 0:
+        tickets = [
+            ("Vantage Retail Group", "Q3 reconciliation export failing silently",
+             "Reporting team can't export the Q3 reconciliation — the scheduled export job has failed silently three mornings running and we're now blocking month-end close. Second export issue in two weeks. Need this fixed today; our finance lead is escalating internally.",
+             "negative"),
+            ("Vantage Retail Group", "Admins logged out mid-session during peak hours",
+             "Two of our admins were logged out mid-session again this afternoon and couldn't get back in for ~15 minutes, during our busiest window. Are you seeing auth issues on your side?",
+             "negative"),
+            ("TechFlow Solutions", "API for the new bulk-import?",
+             "Loving the new bulk-import — we've moved our whole onboarding team onto it. Quick question: is there an API for it? We'd want to wire it into our internal tooling.",
+             "positive"),
+        ]
+        cur.executemany(
+            "INSERT INTO support_tickets (account, subject, body, sentiment) "
+            "VALUES (%s, %s, %s, %s)", tickets)
 
     conn.commit()
 

@@ -191,12 +191,40 @@ def run(event: dict) -> dict:
         log('json_parse_failed', raw_preview=raw[:500], error=str(e))
         return _fallback_evidence(f"Parse failed: {e}")
 
-    exposure = float(analysis.get('total_revenue_exposure', 0))
-    confidence = float(analysis.get('overall_confidence', 0.5))
-    accounts = analysis.get('accounts', [])
-    for a in accounts:
-        a.update(raw_by_name.get(a.get('name'), {}))
-    highest = analysis.get('highest_risk_account', 'Unknown')
+    # ── Real computed scores (Nova only narrates risk_factors / root_cause) ──
+    # risk_score per account is a deterministic weighted formula from the real
+    # signals, NOT the model's number. Exposure, confidence and the lead account
+    # all derive from these computed scores.
+    nova_factors = {a.get('name'): a.get('risk_factors', [])
+                    for a in analysis.get('accounts', [])}
+    arr_by_name = {c['name']: c['arr'] for c in customers}
+    accounts = []
+    for c in customers:
+        s = _compute_revenue_risk(c)
+        accounts.append({
+            'name': c['name'],
+            'risk_score': s,
+            'risk_factors': nova_factors.get(c['name'], []),
+            **raw_by_name.get(c['name'], {}),
+        })
+
+    at_risk = [a['name'] for a in accounts if a['risk_score'] > 0.4]
+    exposure = sum(arr_by_name.get(a['name'], 0.0)
+                   for a in accounts if a['risk_score'] > 0.4)
+
+    qualifying = [a['risk_score'] for a in accounts if a['risk_score'] > 0.3]
+    confidence = (sum(s * s for s in qualifying) / sum(qualifying)
+                  if qualifying else 0.5)
+
+    highest = (max(accounts, key=lambda a: a['risk_score'])['name']
+               if accounts else 'Unknown')
+
+    # Re-attach the computed view so the Orchestrator reads real numbers from
+    # data.accounts (and the description below is consistent).
+    analysis['accounts'] = accounts
+    analysis['total_revenue_exposure'] = exposure
+    analysis['overall_confidence'] = round(confidence, 3)
+    analysis['highest_risk_account'] = highest
 
     if exposure > 1_200_000:
         severity = 'critical'
@@ -206,9 +234,6 @@ def run(event: dict) -> dict:
         severity = 'medium'
     else:
         severity = 'low'
-
-    at_risk = [a.get('name') for a in accounts
-               if a.get('risk_score', 0) > 0.25]
 
     evidence = {
         'agent': 'revenue',
@@ -245,6 +270,29 @@ def run(event: dict) -> dict:
         exposure=exposure, affected_count=len(at_risk))
 
     return evidence
+
+
+def _compute_revenue_risk(c: dict) -> float:
+    """Deterministic renewal-risk score in [0,1] from the real account signals.
+    Weights reflect the documented intent: renewal urgency 40%, health 30%,
+    close probability 15%, sentiment 15%. Higher sub-score = higher risk."""
+    days = c.get('days_to_renewal', 999)
+    if days <= 14:
+        u_renewal = 1.0
+    elif days <= 30:
+        u_renewal = 0.8
+    elif days <= 60:
+        u_renewal = 0.5
+    elif days <= 90:
+        u_renewal = 0.2
+    else:
+        u_renewal = 0.0
+    health = c.get('health_score') or 0
+    u_health = max(0.0, min(1.0, (60 - health) / 60))
+    u_close = max(0.0, min(1.0, 1 - c.get('close_probability', 0.0)))
+    u_sent = max(0.0, min(1.0, -c.get('sentiment_score', 0.0)))
+    score = 0.40 * u_renewal + 0.30 * u_health + 0.15 * u_close + 0.15 * u_sent
+    return round(min(1.0, max(0.0, score)), 3)
 
 
 def _fallback_evidence(reason: str) -> dict:

@@ -246,6 +246,25 @@ export interface SlackResponse {
   total: number
 }
 
+export type SlackTemplate = 'risk' | 'opportunity' | 'coordination' | 'sync'
+
+export interface SlackSendResponse {
+  ok: boolean
+  template: SlackTemplate
+  delivered: boolean
+  status_code: number | null
+  alert: SlackAlert
+}
+
+/** Send one of the four real Block Kit templates via the live webhook (POST
+ *  /slack). It actually posts to Slack and logs to slack_alerts. */
+export const sendSlackTemplate = (template: SlackTemplate): Promise<SlackSendResponse> =>
+  apiFetch<SlackSendResponse>(
+    '/slack',
+    { method: 'POST', body: JSON.stringify({ template }) },
+    15_000,
+  )
+
 // ── Fetchers ───────────────────────────────────────────────────────────────
 
 export const fetchHealth = (): Promise<HealthResponse> =>

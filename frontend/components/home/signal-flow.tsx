@@ -3,14 +3,14 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * SignalFlow — the hero animation: "Noise → Clarity".
+ * SignalFlow – the hero animation: "Noise → Clarity".
  *
  * A dense field of chaotic, scattered signal marks (the raw, fragmented
- * organization — thousands of signals no one can read) eases into a calm,
+ * organization – thousands of signals no one can read) eases into a calm,
  * ordered lattice of aligned ticks (one clear, legible picture). Rendered in
  * three parallax depth layers that respond to the mouse, so the field reads as
  * something you look *into*. At peak resolve a single crisp line forms across
- * the centre — many signals becoming one understanding — then relaxes into a
+ * the centre – many signals becoming one understanding – then relaxes into a
  * gently breathing, occasionally pulse-swept calm.
  *
  * Deliberately NOT the in-product node-cascade: this is about resolution and
@@ -65,7 +65,7 @@ export function SignalFlow({ variant = 'dark' }: { variant?: 'dark' | 'light' })
       lw: number
       baseAlpha: number
       px: number // parallax factor (depth)
-      delay: number // 0..STAGGER — left→right cascade
+      delay: number // 0..STAGGER – left→right cascade
       phase: number // breathing phase
     }
 
@@ -155,7 +155,7 @@ export function SignalFlow({ variant = 'dark' }: { variant?: 'dark' | 'light' })
     function renderMarks(settleAmt: number) {
       // settleAmt: 0 = chaos, 1 = fully ordered. Per-mark staggered.
       const rawT = frame / RESOLVE_FRAMES
-      // Smooth the mouse toward target — responsive enough that the "glance"
+      // Smooth the mouse toward target – responsive enough that the "glance"
       // tracking reads as live, still eased (not jumpy).
       mx += (targetMX - mx) * 0.12
       my += (targetMY - my) * 0.12
@@ -164,7 +164,7 @@ export function SignalFlow({ variant = 'dark' }: { variant?: 'dark' | 'light' })
       const sweepX = settleAmt >= 1 ? ((frame * 2.2) % (width + 240)) - 120 : -9999
 
       // Uniform breathing: the WHOLE settled lattice rises and falls together as
-      // one cohesive body — clearly perceptible at a glance (~3.5s period), calm.
+      // one cohesive body – clearly perceptible at a glance (~3.5s period), calm.
       const breathY = settleAmt >= 1 ? Math.sin(frame * 0.03) * 5 : 0
 
       for (const m of marks) {

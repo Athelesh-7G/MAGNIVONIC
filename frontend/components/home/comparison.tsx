@@ -4,15 +4,15 @@ import { Reveal } from '@/components/reveal'
 
 const ROWS = [
   { feature: 'Cross-domain signal reading',          traditional: false, magnivonic: true },
-  { feature: 'Four insight types — not just alerts',  traditional: false, magnivonic: true },
+  { feature: 'Four insight types – not just alerts',  traditional: false, magnivonic: true },
   { feature: 'Cited, grounded answers (not a black box)', traditional: false, magnivonic: true },
-  { feature: 'Continuous — not on schedule',          traditional: false, magnivonic: true },
+  { feature: 'Continuous – not on schedule',          traditional: false, magnivonic: true },
   { feature: 'Multi-agent coordination',              traditional: false, magnivonic: true },
   { feature: 'Per-team scoped intelligence',          traditional: false, magnivonic: true },
   { feature: 'Organizational memory',                 traditional: false, magnivonic: true },
-  { feature: 'No data migration — reads tools you already run', traditional: false, magnivonic: true },
+  { feature: 'No data migration – reads tools you already run', traditional: false, magnivonic: true },
   { feature: 'Department-level action routing',       traditional: false, magnivonic: true },
-  { feature: 'Proactive — not reactive',              traditional: false, magnivonic: true },
+  { feature: 'Proactive – not reactive',              traditional: false, magnivonic: true },
   { feature: 'Single synthesized understanding',      traditional: false, magnivonic: true },
 ]
 
@@ -51,7 +51,7 @@ export function Comparison() {
               Dashboards report the past. Magnivonic prevents the future.
             </h2>
             <p className="mt-4 text-[17px] text-muted-foreground leading-relaxed max-w-[400px]">
-              Dashboards show you one domain at a time, and only when you go looking. Magnivonic reasons across all of them at once, continuously — and remembers what it learned.
+              Dashboards show you one domain at a time, and only when you go looking. Magnivonic reasons across all of them at once, continuously – and remembers what it learned.
             </p>
           </Reveal>
 

@@ -12,13 +12,13 @@ const MEMORY_STEPS = [
   {
     stage: 'Match',
     label: 'Historical match found',
-    text: 'Q3 2024 — TechCorp. Similar access pattern + renewal window. Score 0.91.',
+    text: 'Q3 2024 – TechCorp. Similar access pattern + renewal window. Score 0.91.',
     active: false,
   },
   {
     stage: 'Lesson',
     label: 'What was learned',
-    text: 'Escalating AE first — before security review — reduced churn probability by 63%.',
+    text: 'Escalating AE first – before security review – reduced churn probability by 63%.',
     active: false,
   },
 ]
@@ -74,7 +74,7 @@ export function OrgMemory() {
               <span className="text-primary">the next one sharper.</span>
             </h2>
             <p className="mt-6 text-[17px] text-white/70 leading-relaxed max-w-[440px]">
-              Every situation is matched against the organization&apos;s own history — what happened, what was done, what it cost. Recall runs as a pgvector similarity search on Aurora, so each decision makes the next one sharper. The longer Magnivonic runs, the more it knows.
+              Every situation is matched against the organization&apos;s own history – what happened, what was done, what it cost. Recall runs as a pgvector similarity search on Aurora, so each decision makes the next one sharper. The longer Magnivonic runs, the more it knows.
             </p>
             <div className="mt-10 flex items-start gap-4">
               <div className="w-px h-16 bg-primary/60 mt-1 shrink-0" />

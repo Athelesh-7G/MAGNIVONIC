@@ -7,7 +7,7 @@ const STEPS = [
     index: '01',
     slug:  'SENSE',
     headline: 'Nothing in the organization goes unread.',
-    body: 'Magnivonic reads the tools you already run — CRM, GitHub, support, security. Nothing to upload, nothing to migrate: you confirm the connections, and the domain agents start reading the signals that matter, the moment they change.',
+    body: 'Magnivonic reads the tools you already run – CRM, GitHub, support, security. Nothing to upload, nothing to migrate: you confirm the connections, and the domain agents start reading the signals that matter, the moment they change.',
     visual: (
       <div className="bg-primary h-full min-h-[280px] rounded-xl p-8 flex flex-col justify-between relative overflow-hidden">
         {/* Corner markers like Supermemory */}
@@ -35,7 +35,7 @@ const STEPS = [
     index: '02',
     slug:  'GATHER',
     headline: 'Every signal, unified the moment it appears.',
-    body: 'The Chief of Staff agent receives what every domain agent is seeing — simultaneously — and assembles them into one unified picture of the organization at that moment.',
+    body: 'The Chief of Staff agent receives what every domain agent is seeing – simultaneously – and assembles them into one unified picture of the organization at that moment.',
     visual: (
       <div className="bg-[#060912] border border-white/[0.07] h-full min-h-[280px] rounded-xl p-8 flex items-center gap-5 relative overflow-hidden">
         <span className="absolute top-3 left-3 w-2 h-2 border-t border-l border-white/10" />
@@ -79,7 +79,7 @@ const STEPS = [
     index: '03',
     slug:  'CONNECT',
     headline: 'It connects what no single team could see.',
-    body: 'The General Manager reasons across the unified picture — finding the moment signals that looked unrelated in isolation are actually the same event, requiring a coordinated response.',
+    body: 'The General Manager reasons across the unified picture – finding the moment signals that looked unrelated in isolation are actually the same event, requiring a coordinated response.',
     visual: (
       <div className="bg-primary h-full min-h-[280px] rounded-xl p-8 relative overflow-hidden">
         <span className="absolute top-3 left-3 w-2 h-2 border-t border-l border-white/30" />
@@ -98,7 +98,7 @@ const STEPS = [
           </div>
           <div className="rounded-lg bg-white/10 border border-white/20 px-4 py-3">
             <p className="font-mono text-[10px] text-white/40 uppercase tracking-widest">Revenue signal</p>
-            <p className="text-white text-sm mt-0.5">Renewal at risk — same account</p>
+            <p className="text-white text-sm mt-0.5">Renewal at risk – same account</p>
           </div>
           <div className="rounded-lg bg-white/25 border border-white/30 px-4 py-3">
             <p className="font-mono text-[10px] text-white/60 uppercase tracking-widest">General Manager</p>
@@ -112,7 +112,7 @@ const STEPS = [
     index: '04',
     slug:  'REMEMBER',
     headline: 'The organization\'s history is part of every decision.',
-    body: 'Every situation is checked against how the organization has handled something similar before — what actions were taken, what was learned — so the same lessons compound over time.',
+    body: 'Every situation is checked against how the organization has handled something similar before – what actions were taken, what was learned – so the same lessons compound over time.',
     visual: (
       <div className="bg-[#060912] border border-white/[0.07] h-full min-h-[280px] rounded-xl p-8 flex flex-col justify-center gap-0 relative overflow-hidden">
         <span className="absolute top-3 left-3 w-2 h-2 border-t border-l border-white/10" />
@@ -121,7 +121,7 @@ const STEPS = [
         <span className="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-white/10" />
         {[
           { tag: 'Now', label: 'Current situation', text: 'Access anomaly · renewal in 42 days', strong: true },
-          { tag: 'Match', label: 'Historical match', text: 'Q3 2024 — same pattern · score 0.91', accent: true },
+          { tag: 'Match', label: 'Historical match', text: 'Q3 2024 – same pattern · score 0.91', accent: true },
           { tag: 'Lesson', label: 'What was learned', text: 'Escalate to AE first → churn risk −63%' },
         ].map((row, i) => (
           <div key={i}>
@@ -153,7 +153,7 @@ const STEPS = [
     index: '05',
     slug:  'ACT',
     headline: 'One synthesized understanding becomes department-level action.',
-    body: 'A single, coordinated understanding reaches every relevant team with specific recommended actions — a directive delivered the moment it matters, not a report to be reviewed. And anyone can ask in plain language and get an answer that shows its sources first — every claim traced to the live evidence and the past incidents behind it.',
+    body: 'A single, coordinated understanding reaches every relevant team with specific recommended actions – a directive delivered the moment it matters, not a report to be reviewed. And anyone can ask in plain language and get an answer that shows its sources first – every claim traced to the live evidence and the past incidents behind it.',
     visual: (
       <div className="bg-primary h-full min-h-[280px] rounded-xl p-8 relative overflow-hidden">
         <span className="absolute top-3 left-3 w-2 h-2 border-t border-l border-white/30" />
@@ -162,7 +162,7 @@ const STEPS = [
         <span className="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-white/30" />
         <div className="space-y-2.5">
           {[
-            { dept: 'Account Executive', action: 'Reach out — renewal urgency elevated' },
+            { dept: 'Account Executive', action: 'Reach out – renewal urgency elevated' },
             { dept: 'Security',          action: 'Review access logs for this account' },
             { dept: 'Customer Success',  action: 'Schedule health check immediately' },
           ].map(({ dept, action }) => (
@@ -180,7 +180,7 @@ const STEPS = [
 export function HowItWorks() {
   return (
     <section id="how-it-works" className="bg-background">
-      {/* Section header row — exactly like Supermemory */}
+      {/* Section header row – exactly like Supermemory */}
       <div className="max-w-[1280px] mx-auto px-8">
         <div className="flex items-center border-b border-border py-4">
           <span className="font-mono text-[11px] tracking-[0.25em] uppercase text-muted-foreground">
@@ -197,7 +197,7 @@ export function HowItWorks() {
             From scattered signals to a decision your teams can act on.
           </h2>
           <p className="mt-4 text-[17px] text-muted-foreground leading-relaxed">
-            Sense, gather, connect, remember, act. The full cycle runs continuously — not on a schedule, not on request.
+            Sense, gather, connect, remember, act. The full cycle runs continuously – not on a schedule, not on request.
           </p>
         </div>
 
@@ -221,7 +221,7 @@ export function HowItWorks() {
                 </p>
               </div>
 
-              {/* Right: visual — alternate order on even steps */}
+              {/* Right: visual – alternate order on even steps */}
               <div className={i % 2 === 1 ? 'md:order-first' : ''}>
                 {step.visual}
               </div>

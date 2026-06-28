@@ -18,7 +18,7 @@ const LOOP = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
 export function Hero() {
   const ref = useRef<HTMLElement>(null)
   // Mouse-follow spotlight (Veloquity's hero pattern) + scroll parallax on the
-  // animation layer — purposeful depth, not decoration.
+  // animation layer – purposeful depth, not decoration.
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   const spotlight = useMotionTemplate`radial-gradient(560px circle at ${mouseX}px ${mouseY}px, oklch(0.54 0.25 293 / 0.10), transparent 72%)`
@@ -37,7 +37,7 @@ export function Hero() {
     >
       {/* ── Background layers ── */}
       <div aria-hidden className="absolute inset-0 dot-grid" />
-      {/* The signature animation — full-bleed, drifts gently on scroll */}
+      {/* The signature animation – full-bleed, drifts gently on scroll */}
       <motion.div aria-hidden className="absolute inset-0" style={{ y: flowY }}>
         <SignalFlow variant="light" />
       </motion.div>
@@ -75,7 +75,7 @@ export function Hero() {
           </span>
         </div>
 
-        {/* Headline — Supermemory-scale, balanced with breathing room */}
+        {/* Headline – Supermemory-scale, balanced with breathing room */}
         <h1
           className="text-[clamp(40px,5.4vw,76px)] leading-[1.02] font-black tracking-[-0.035em] text-foreground text-balance max-w-[920px] mx-auto animate-fade-up"
           style={{ animationDelay: '0.05s' }}
@@ -85,15 +85,14 @@ export function Hero() {
           <span className="text-primary">for the enterprise.</span>
         </h1>
 
-        {/* Subtitle — one coherent thought */}
+        {/* Subtitle – one coherent thought */}
         <p
           className="mt-7 text-[19px] md:text-[20px] leading-relaxed text-muted-foreground max-w-[860px] mx-auto text-pretty animate-fade-up"
           style={{ animationDelay: '0.12s' }}
         >
-          Magnivonic reads every team your business runs on &mdash; sales, engineering, support,
-          security &mdash; and reasons across them to surface what no single team sees on its own:
-          risks, opportunities, and coordination gaps. Each finding is carried through to a clear,
-          evidence-backed recommendation for the people who decide.
+          The zero-stack command center for cross-domain enterprise intelligence. Magnivonic
+          synchronizes engineering signals, support tickets, and sales pipelines through parallel
+          AI agents to eliminate systemic operational blindness before it impacts your bottom line.
         </p>
 
         {/* CTAs */}
@@ -116,7 +115,7 @@ export function Hero() {
           </a>
         </div>
 
-        {/* Continuous marquee — part of the centered group, no dead gap */}
+        {/* Continuous marquee – part of the centered group, no dead gap */}
         <div
           className="w-full max-w-[940px] mx-auto mt-8 animate-fade-up"
           style={{ animationDelay: '0.26s' }}

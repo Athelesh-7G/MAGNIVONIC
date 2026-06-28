@@ -13,7 +13,7 @@ const CASCADE = [
   {
     agent: 'Customer Success',
     time:  'T + 2 min',
-    signal: 'Support ticket volume spikes — three product confusion tickets in 90 minutes.',
+    signal: 'Support ticket volume spikes – three product confusion tickets in 90 minutes.',
     color:  'border-sky-400/60 bg-sky-400/5',
     dot:    'bg-sky-400',
   },
@@ -34,7 +34,7 @@ const CASCADE = [
   {
     agent: 'General Manager',
     time:  'T + 5 min',
-    signal: 'Single event. Coordinated response issued to Account Executive, Security, and CS — before any team acted alone.',
+    signal: 'Single event. Coordinated response issued to Account Executive, Security, and CS – before any team acted alone.',
     color:  'border-primary bg-primary/10',
     dot:    'bg-primary',
     highlight: true,
@@ -78,7 +78,7 @@ export function Proof() {
 
           {/* Left: the narrative */}
           <div>
-            <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted-foreground mb-5">Vantage Retail Group — a real situation</p>
+            <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted-foreground mb-5">Vantage Retail Group – a real situation</p>
             <h2 className="text-[clamp(28px,3.2vw,42px)] font-bold tracking-[-0.03em] leading-[1.08] text-foreground text-balance">
               A $1.41M renewal almost slipped through the gaps between three teams.
               <br />
@@ -90,7 +90,7 @@ export function Proof() {
                 A security irregularity on Vantage Retail Group&apos;s account looked, on its own, like a routine access review. A rise in support tickets at the same account looked, on its own, like a product confusion issue. A renewal sitting on the pipeline looked, on its own, like any other deal.
               </p>
               <p>
-                Magnivonic&apos;s domain agents each saw their own signal. The Chief of Staff brought them together. The General Manager recognized they were the same event — a customer showing friction, confusion, and access concerns simultaneously — and connected it to a renewal at risk.
+                Magnivonic&apos;s domain agents each saw their own signal. The Chief of Staff brought them together. The General Manager recognized they were the same event – a customer showing friction, confusion, and access concerns simultaneously – and connected it to a renewal at risk.
               </p>
               <p>
                 The coordinated response reached the Account Executive, Security team, and Customer Success manager before any of the three had individually escalated. The renewal closed.

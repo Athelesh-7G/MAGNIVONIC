@@ -129,6 +129,54 @@ def _extract_json(text: str) -> dict:
     return json.loads(text[start:end + 1])
 
 
+def _compute_churn_risk(c: dict) -> float:
+    """Deterministic churn score in [0,1]. Each of the six documented signals
+    contributes severity 0/1/2 by its threshold; the sum is normalised by 8
+    (≈4 moderate signals → ceiling). No model judgment."""
+    sev = 0
+    h = c.get('health_score')
+    if h is not None:
+        if h < 40:
+            sev += 2
+        elif h < 55:
+            sev += 1
+    s = c.get('avg_sentiment_score', 0.0)
+    if s < -0.5:
+        sev += 2
+    elif s < -0.25:
+        sev += 1
+    prev = c.get('ticket_count_prev_7d') or 0
+    cur = c.get('ticket_count_7d') or 0
+    if prev > 0:
+        ratio = cur / prev
+        if ratio > 3:
+            sev += 2
+        elif ratio > 2:
+            sev += 1
+    elif cur >= 10:
+        sev += 2
+    elif cur > 0:
+        sev += 1
+    ad = c.get('feature_adoption_score')
+    if ad is not None:
+        if ad < 30:
+            sev += 2
+        elif ad < 45:
+            sev += 1
+    esc = c.get('open_escalations') or 0
+    if esc >= 3:
+        sev += 2
+    elif esc >= 1:
+        sev += 1
+    nps = c.get('nps_score')
+    if nps is not None:
+        if nps < 0:
+            sev += 2
+        elif nps < 25:
+            sev += 1
+    return round(min(1.0, sev / 8.0), 3)
+
+
 def run(event: dict) -> dict:
     conn = get_conn()
     try:
@@ -181,22 +229,41 @@ def run(event: dict) -> dict:
         log('json_parse_failed', raw_preview=raw[:500], error=str(e))
         return _fallback_evidence(f"Parse failed: {e}")
 
-    accounts = analysis.get('accounts', [])
-    # Re-attach the raw input metrics the model doesn't echo back in its
-    # output schema — the Orchestrator needs positive indicators (high
-    # adoption, positive sentiment) to recognize Opportunity, not just the
-    # derived churn_risk_score.
-    raw_by_name = {c['name']: c for c in customers_data}
-    for a in accounts:
-        raw = raw_by_name.get(a.get('name'), {})
-        a['health_score'] = raw.get('health_score')
-        a['feature_adoption_score'] = raw.get('feature_adoption_score')
-        a['avg_sentiment_score'] = raw.get('avg_sentiment_score')
-        a['nps_score'] = raw.get('nps_score')
-    high_risk = len([a for a in analysis.get('accounts', [])
-                     if a.get('churn_risk_score', 0) >= 0.25])
-    confidence = float(analysis.get('overall_churn_confidence', 0.5))
-    highest = analysis.get('highest_risk_account', 'Unknown')
+    # ── Real computed scores (Nova only narrates churn_signals text) ────────
+    # churn_risk_score per account is a deterministic signal-severity formula
+    # from the six documented signals, NOT the model's number. The raw input
+    # metrics are re-attached so the Orchestrator can still spot Opportunity.
+    nova_signals = {a.get('name'): a.get('churn_signals', [])
+                    for a in analysis.get('accounts', [])}
+    arr_by_name = {c['name']: c['arr'] for c in customers_data}
+    accounts = []
+    for c in customers_data:
+        s = _compute_churn_risk(c)
+        accounts.append({
+            'name': c['name'],
+            'churn_risk_score': s,
+            'churn_signals': nova_signals.get(c['name'], []),
+            'health_score': c.get('health_score'),
+            'feature_adoption_score': c.get('feature_adoption_score'),
+            'avg_sentiment_score': c.get('avg_sentiment_score'),
+            'nps_score': c.get('nps_score'),
+        })
+
+    high_risk = len([a for a in accounts if a['churn_risk_score'] > 0.5])
+    at_risk = [a['name'] for a in accounts if a['churn_risk_score'] >= 0.35]
+
+    qual = [(a['churn_risk_score'], arr_by_name.get(a['name'], 0.0))
+            for a in accounts if a['churn_risk_score'] > 0.35]
+    total_w = sum(w for _, w in qual)
+    confidence = (sum(s * w for s, w in qual) / total_w
+                  if total_w > 0 else 0.5)
+    highest = (max(accounts, key=lambda a: a['churn_risk_score'])['name']
+               if accounts else 'Unknown')
+
+    analysis['accounts'] = accounts
+    analysis['overall_churn_confidence'] = round(confidence, 3)
+    analysis['highest_risk_account'] = highest
+    analysis['high_risk_count'] = high_risk
 
     if high_risk >= 3:
         severity = 'critical'
@@ -206,9 +273,6 @@ def run(event: dict) -> dict:
         severity = 'medium'
     else:
         severity = 'low'
-
-    at_risk = [a.get('name') for a in accounts
-               if a.get('churn_risk_score', 0) >= 0.25]
 
     # accounts[0] may not be the highest risk — find the account
     # matching highest_risk_account by name for its signals.

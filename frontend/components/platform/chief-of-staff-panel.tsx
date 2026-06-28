@@ -81,7 +81,7 @@ export function ChiefOfStaffPanel({ summaries }: { summaries?: Record<string, Ag
                   {conf !== null ? (
                     <span className="text-xs tabular-nums text-muted-foreground">{conf}% conf.</span>
                   ) : null}
-                  <ScoreProvenance kind={d.kind} />
+                  <ScoreProvenance kind={d.kind} label="scored" />
                 </div>
               </div>
               <p className="text-[13px] text-foreground/90 leading-snug">

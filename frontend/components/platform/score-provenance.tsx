@@ -44,31 +44,39 @@ const COPY: Record<ScoreKind, { title: string; computed: boolean; body: string }
   },
   gm: {
     title: 'How this was scored',
-    computed: false,
+    computed: true,
     body:
-      'The General Manager’s (Amazon Nova Pro) judgment of this classification — not an arithmetic score. It reflects how many independent domains corroborate the finding; the one-line rationale shown with the insight states why it’s high, medium, or low.',
+      'Confidence is computed, not guessed: half from how many of the four domains corroborate this insight, half from those domains’ own severity-weighted confidence (floor 0.30). Nova Pro only narrates the result — the rationale shown with the insight explains it. (The X/100 is the General Manager’s magnitude rating, a separate model judgment.)',
   },
   revenue: {
     title: 'How this was scored',
-    computed: false,
+    computed: true,
     body:
-      'Nova Pro’s judgment per account, weighing health score (~30%), renewal urgency, close probability and sentiment. The model is guided by those criteria — it is not a fixed code formula.',
+      'Deterministic weighted formula: risk = 0.40·renewal-urgency + 0.30·health + 0.15·(1−close-probability) + 0.15·negative-sentiment, each normalised to 0–1 and capped. Computed in code from the account’s real signals — Nova Pro only writes the risk-factor text.',
   },
   customer: {
     title: 'How this was scored',
-    computed: false,
+    computed: true,
     body:
-      'Nova Pro’s judgment per account, weighing the triggered churn signals — health, sentiment, ticket trend, feature adoption and NPS — by severity. Guided by those criteria, not a fixed code formula.',
+      'Deterministic signal formula: each of the six churn signals (health, sentiment, ticket spike, adoption, escalations, NPS) scores severity 0/1/2 by its threshold; churn = Σ severity ÷ 8, capped at 1.0. Computed in code — Nova Pro only writes the signal descriptions.',
   },
   operations: {
     title: 'How this was scored',
-    computed: false,
+    computed: true,
     body:
-      'Nova Pro’s judgment from real GitHub delivery signals — open PRs, blocker issues, CI failures and commit velocity. Guided by those signals, not a fixed code formula.',
+      'Deterministic additive formula from real GitHub signals: min(0.25, open-PRs×0.05) + min(0.30, blocker-issues×0.15) + min(0.20, CI-failures×0.10) + (commit velocity decreasing ? 0.15 : 0), capped at 1.0. No model judgment.',
   },
 }
 
-export function ScoreProvenance({ kind, className }: { kind: ScoreKind; className?: string }) {
+export function ScoreProvenance({
+  kind,
+  label = 'How this was scored',
+  className,
+}: {
+  kind: ScoreKind
+  label?: string
+  className?: string
+}) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
   const copy = COPY[kind]
@@ -94,9 +102,10 @@ export function ScoreProvenance({ kind, className }: { kind: ScoreKind; classNam
         onClick={() => setOpen((o) => !o)}
         aria-label="How this was scored"
         aria-expanded={open}
-        className="inline-flex items-center justify-center text-muted-foreground/60 hover:text-foreground transition-colors align-middle"
+        className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground underline decoration-dotted underline-offset-2 transition-colors align-middle"
       >
-        <Info size={13} strokeWidth={2} />
+        <Info size={12} strokeWidth={2} />
+        {label}
       </button>
       {open ? (
         <span
@@ -120,6 +129,12 @@ export function ScoreProvenance({ kind, className }: { kind: ScoreKind; classNam
             </span>
           </span>
           <span className="block text-[12px] leading-relaxed text-muted-foreground">{copy.body}</span>
+          <a
+            href={`/platform/confidence#${kind}`}
+            className="mt-2 inline-block text-[11px] font-medium text-primary hover:underline"
+          >
+            See every score &amp; formula →
+          </a>
         </span>
       ) : null}
     </span>

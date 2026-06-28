@@ -1,9 +1,10 @@
 'use client'
 
-import useSWR from 'swr'
+import { useState } from 'react'
+import useSWR, { useSWRConfig } from 'swr'
 import { motion } from 'framer-motion'
 import { GitPullRequest, CircleAlert, GitCommitHorizontal, Bell, ArrowUpRight } from 'lucide-react'
-import { fetchGithub, fetchSlack, type GithubResponse, type SlackResponse } from '@/lib/api'
+import { fetchGithub, fetchSlack, sendSlackTemplate, type GithubResponse, type SlackResponse, type SlackTemplate } from '@/lib/api'
 import { PageHeader } from '@/components/platform/page-header'
 import { SeverityBadge, formatTimestamp, OK, WARN, CRIT, Stat } from '@/components/platform/signal-ui'
 import { AtRest } from '@/components/platform/at-rest'
@@ -172,6 +173,57 @@ function ActivityList({ icon, label, items }: { icon: React.ReactNode; label: st
   )
 }
 
+const SLACK_TEMPLATES: { id: SlackTemplate; label: string; accent: string }[] = [
+  { id: 'risk', label: 'Risk alert', accent: CRIT },
+  { id: 'opportunity', label: 'Opportunity', accent: OK },
+  { id: 'coordination', label: 'Coordination gap', accent: WARN },
+  { id: 'sync', label: 'Schedule sync', accent: 'var(--primary)' },
+]
+
+function SlackSendRow() {
+  const { mutate } = useSWRConfig()
+  const [sending, setSending] = useState<SlackTemplate | null>(null)
+  const [note, setNote] = useState<string | null>(null)
+
+  async function send(t: SlackTemplate, label: string) {
+    setSending(t)
+    setNote(null)
+    try {
+      const res = await sendSlackTemplate(t)
+      setNote(res.delivered ? `Sent “${label}” → channel` : `Send failed (status ${res.status_code ?? '—'})`)
+      mutate('slack') // refresh the history below so the new alert appears
+    } catch {
+      setNote('Send failed — network or webhook error')
+    } finally {
+      setSending(null)
+    }
+  }
+
+  return (
+    <div className="rounded-xl border border-border bg-card/40 p-3.5 mb-3">
+      <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2.5">
+        Send a real message · posts to the live webhook &amp; logs below
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {SLACK_TEMPLATES.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            disabled={sending !== null}
+            onClick={() => send(t.id, t.label)}
+            className="inline-flex items-center gap-1.5 text-xs font-medium rounded-lg border px-3 py-1.5 transition-colors hover:bg-muted disabled:opacity-50"
+            style={{ borderColor: `color-mix(in oklch, ${t.accent} 35%, var(--border))` }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: t.accent }} />
+            {sending === t.id ? 'Sending…' : t.label}
+          </button>
+        ))}
+      </div>
+      {note ? <p className="text-xs text-muted-foreground mt-2">{note}</p> : null}
+    </div>
+  )
+}
+
 function SlackCard() {
   const { data } = useSWR<SlackResponse>('slack', fetchSlack)
 
@@ -182,6 +234,7 @@ function SlackCard() {
       connected={data?.connected}
       right={<RepoLink href={SLACK_CHANNEL_URL} label="Open channel" />}
     >
+      <SlackSendRow />
       {!data ? (
         <p className="text-sm text-muted-foreground animate-pulse">Loading alert history…</p>
       ) : data.alerts.length === 0 ? (

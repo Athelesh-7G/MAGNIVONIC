@@ -44,7 +44,7 @@ export function SiteFooter() {
               <span className="text-[14px] font-semibold text-foreground">Magnivonic</span>
             </div>
             <p className="text-[13px] text-muted-foreground leading-relaxed max-w-[240px]">
-              The core organizational intelligence layer for enterprises &mdash; reading, coordinating, and acting across every department, continuously.
+              The core organizational intelligence layer for enterprises &ndash; reading, coordinating, and acting across every department, continuously.
             </p>
             <p className="mt-6 font-mono text-[10px] tracking-[0.15em] uppercase text-muted-foreground/50">
               © 2026 Magnivonic Inc.
@@ -76,7 +76,7 @@ export function SiteFooter() {
         {/* Bottom divider */}
         <div className="border-t border-border" />
 
-        {/* Giant pale wordmark — Supermemory closing pattern */}
+        {/* Giant pale wordmark – Supermemory closing pattern */}
         <div className="relative overflow-hidden py-8 select-none pointer-events-none" aria-hidden>
           <p
             className="text-[clamp(80px,14vw,180px)] font-black tracking-[-0.04em] leading-none text-foreground/[0.04]"

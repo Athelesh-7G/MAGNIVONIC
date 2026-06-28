@@ -144,6 +144,40 @@ def _extract_json(text: str) -> dict:
     return json.loads(text[start:end + 1])
 
 
+_SEV_RANK = {'critical': 4, 'high': 3, 'medium': 2, 'low': 1}
+
+
+def _compute_insight_confidence(insight: dict, agent_summaries: dict) -> float:
+    """Real corroboration-weighted confidence in [0,1] (adapted from Veloquity's
+    composite, minus recency — every Magnivonic signal is real-time, so a recency
+    term would be a fabricated input). Half from how many of the four domains
+    corroborate this insight, half from those domains' own severity-weighted
+    confidence. Computed in code; Nova Pro only narrates it."""
+    account = insight.get('account')
+    corrob = []
+    for summ in agent_summaries.values():
+        affected = summ.get('affected') or []
+        if account and account in affected:
+            corrob.append(summ)
+        elif not account and (summ.get('severity') or 'low') != 'low':
+            # Org-internal insight (e.g. CoordinationGap): corroborated by the
+            # domains that actually flagged something this scan.
+            corrob.append(summ)
+    breadth = len(corrob) / 4.0
+    total_rank = sum(_SEV_RANK.get(s.get('severity') or 'low', 1) for s in corrob)
+    if total_rank > 0:
+        strength = sum(
+            (s.get('confidence') or 0.0) * _SEV_RANK.get(s.get('severity') or 'low', 1)
+            for s in corrob
+        ) / total_rank
+    else:
+        strength = 0.0
+    conf = 0.5 * breadth + 0.5 * strength
+    # 0.3 floor = the single-source baseline (the insight exists and is grounded
+    # in real evidence even when only one domain corroborates it).
+    return round(min(1.0, max(0.3, conf)), 3)
+
+
 def _invoke_coordinator(trigger: str) -> dict:
     lambda_client = boto3.client('lambda', region_name='us-east-1')
     response = lambda_client.invoke(
@@ -447,6 +481,13 @@ def run(event: dict) -> dict:
         if past_risks else 0)
 
     insights = _synthesize(context, past_risks)
+
+    # Per-insight confidence is COMPUTED from real domain corroboration (not the
+    # model's number). Nova Pro's confidence_narrative remains its explanation of
+    # this computed value; the model no longer invents the score itself.
+    agent_summaries = context.get('agent_summaries', {})
+    for insight in insights:
+        insight['confidence'] = _compute_insight_confidence(insight, agent_summaries)
 
     for insight in insights:
         try:

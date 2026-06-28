@@ -10,8 +10,10 @@ import {
   MessageSquareText,
   Cpu,
   Brain,
+  Gauge,
   FolderOpen,
   Radio,
+  Hammer,
   DollarSign,
   ShieldCheck,
   GitBranch,
@@ -50,6 +52,7 @@ const NAV_SECTIONS: NavSection[] = [
     title: 'Specialized Agents',
     items: [
       { label: 'Engine Room', href: '/platform/engine', icon: Cpu },
+      { label: 'Confidence', href: '/platform/confidence', icon: Gauge },
       { label: 'Organizational Memory', href: '/platform/memory', icon: Brain },
       { label: 'Connections', href: '/platform/connections', icon: Cable },
     ],
@@ -60,6 +63,7 @@ const NAV_SECTIONS: NavSection[] = [
       { label: 'Executive Briefs', href: '/platform/briefs', icon: ScrollText },
       { label: 'Dossiers', href: '/platform/dossiers', icon: FolderOpen },
       { label: 'The Wire', href: '/platform/wire', icon: Radio },
+      { label: 'The Work', href: '/platform/work', icon: Hammer },
     ],
   },
 ]

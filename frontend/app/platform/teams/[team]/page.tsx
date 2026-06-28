@@ -141,44 +141,67 @@ function TeamView({ config }: { config: TeamConfig }) {
 
       <PageHeader eyebrow="Department Intelligence" title={config.label} subtitle={config.subtitle} />
 
-      {/* Agent identity. AI teams get a soft accent-tinted card; Security (the
-          one deterministic agent) gets a deliberately harder, gradient-free,
-          crisp-bordered treatment so the rules-not-probabilistic nature is felt
-          visually, not just stated. */}
-      <div
-        className={'mt-6 rounded-xl border px-4 py-4 ' + (config.ai ? 'bg-gradient-to-br from-card to-secondary/20' : 'bg-card')}
-        style={{
-          borderColor: config.ai
-            ? `color-mix(in oklch, ${accent} 30%, var(--border))`
-            : `color-mix(in oklch, ${accent} 55%, var(--border))`,
-        }}
-      >
-        {/* What it does leads; the technical nature + source are small secondary tags. */}
-        <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
-          <span className="text-sm font-semibold text-foreground">{config.label} Agent</span>
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span
-              className="text-xs uppercase tracking-widest px-1.5 py-0.5 rounded border font-semibold"
-              style={{ color: accent, borderColor: `color-mix(in oklch, ${accent} 45%, transparent)` }}
-            >
-              {config.ai ? 'Nova Pro' : 'Deterministic'}
-            </span>
-            <span className="text-xs uppercase tracking-widest px-1.5 py-0.5 rounded border border-border text-muted-foreground">
-              {config.channel}
-            </span>
+      {/* Veloquity-style top split: who this agent is (left) and what it's
+          reading right now (right), side by side. AI teams get a soft accent-
+          tinted identity card; Security (the one deterministic agent) gets a
+          harder, gradient-free, crisp-bordered treatment so the rules-not-
+          probabilistic nature is felt visually, not just stated. */}
+      <div className="mt-6 grid lg:grid-cols-[1.05fr_1fr] gap-5 items-stretch">
+        {/* LEFT — agent identity */}
+        <div
+          className={'rounded-xl border px-4 py-4 ' + (config.ai ? 'bg-gradient-to-br from-card to-secondary/20' : 'bg-card')}
+          style={{
+            borderColor: config.ai
+              ? `color-mix(in oklch, ${accent} 30%, var(--border))`
+              : `color-mix(in oklch, ${accent} 55%, var(--border))`,
+          }}
+        >
+          <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
+            <span className="text-sm font-semibold text-foreground">{config.label} Agent</span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span
+                className="text-xs uppercase tracking-widest px-1.5 py-0.5 rounded border font-semibold"
+                style={{ color: accent, borderColor: `color-mix(in oklch, ${accent} 45%, transparent)` }}
+              >
+                {config.ai ? 'Nova Pro' : 'Deterministic'}
+              </span>
+              <span className="text-xs uppercase tracking-widest px-1.5 py-0.5 rounded border border-border text-muted-foreground">
+                {config.channel}
+              </span>
+            </div>
           </div>
+          <p className="text-sm text-foreground/85 leading-relaxed">
+            {config.nature}
+            {!config.ai ? (
+              <>
+                {' '}
+                <Link href="/platform/engine" className="text-primary hover:underline">
+                  Engine Room →
+                </Link>
+              </>
+            ) : null}
+          </p>
         </div>
-        <p className="text-sm text-foreground/85 leading-relaxed">
-          {config.nature}
-          {!config.ai ? (
-            <>
-              {' '}
-              <Link href="/platform/engine" className="text-primary hover:underline">
-                Engine Room →
-              </Link>
-            </>
-          ) : null}
-        </p>
+
+        {/* RIGHT — live signal feeding this team, across accounts */}
+        <div className="rounded-xl border border-border bg-card/40 px-4 py-4">
+          <p className="text-xs tracking-[0.2em] uppercase mb-1" style={{ color: accent }}>
+            {'>'} Live signal · {config.channel}
+          </p>
+          <p className="text-sm text-muted-foreground mb-3">The raw feed this team reads, across every account.</p>
+          {!customersData ? (
+            <div className="rounded-xl border border-border bg-card/40 px-4 py-8 text-center">
+              <p className="text-sm text-muted-foreground animate-pulse">Loading the live feed…</p>
+            </div>
+          ) : (
+            <TeamSignalStrip customers={customers} department={config.department} />
+          )}
+          <p className="mt-3 text-xs text-muted-foreground/60">
+            {config.department === 'operations'
+              ? 'Live from the connected GitHub workspace'
+              : `Live from ${config.channel}`}
+          </p>
+        </div>
       </div>
 
       {/* PRIMARY 1 — query the engine, scoped to this team (the centre of gravity) */}
@@ -194,6 +217,7 @@ function TeamView({ config }: { config: TeamConfig }) {
           department={config.department}
           examples={config.examples}
           placeholder={`Ask about ${config.label.toLowerCase()} — renewals, risks, what’s worked before…`}
+          boxed
         />
       </section>
 
@@ -240,25 +264,6 @@ function TeamView({ config }: { config: TeamConfig }) {
         )}
       </section>
 
-      {/* SECONDARY — live signal feeding this team, across accounts */}
-      <section className="mt-10">
-        <p className="text-xs tracking-[0.2em] uppercase mb-1" style={{ color: accent }}>
-          {'>'} Live signal · {config.channel}
-        </p>
-        <p className="text-sm text-muted-foreground mb-3">The raw feed this team reads, across every account.</p>
-        {!customersData ? (
-          <div className="rounded-xl border border-border bg-card/40 px-4 py-8 text-center">
-            <p className="text-sm text-muted-foreground animate-pulse">Loading the live feed…</p>
-          </div>
-        ) : (
-          <TeamSignalStrip customers={customers} department={config.department} />
-        )}
-        <p className="mt-3 text-xs text-muted-foreground/60">
-          {config.department === 'operations'
-            ? 'Live from the connected GitHub workspace'
-            : `Live from ${config.channel}`}
-        </p>
-      </section>
     </div>
   )
 }

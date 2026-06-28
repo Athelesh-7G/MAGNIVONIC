@@ -3,9 +3,9 @@
 import { Reveal } from '@/components/reveal'
 
 const STACK = [
-  { layer: 'Reasoning', tech: 'Amazon Bedrock — Nova Pro', detail: 'Cross-domain synthesis' },
+  { layer: 'Reasoning', tech: 'Amazon Bedrock – Nova Pro', detail: 'Cross-domain synthesis' },
   { layer: 'Compute',   tech: 'AWS Lambda',                detail: 'Four domain agents in parallel' },
-  { layer: 'Data',      tech: 'Aurora PostgreSQL + pgvector', detail: 'Vector memory — incidents recalled by similarity (HNSW)' },
+  { layer: 'Data',      tech: 'Aurora PostgreSQL + pgvector', detail: 'Vector memory – incidents recalled by similarity (HNSW)' },
   { layer: 'Events',    tech: 'Amazon EventBridge',        detail: 'Background agent event bus' },
   { layer: 'Live feed', tech: 'GitHub API',                detail: 'Real engineering delivery signals' },
   { layer: 'Alerts',    tech: 'Slack',                     detail: 'Executive alerts on every run' },
