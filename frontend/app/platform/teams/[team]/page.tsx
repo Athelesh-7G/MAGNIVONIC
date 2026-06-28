@@ -141,13 +141,13 @@ function TeamView({ config }: { config: TeamConfig }) {
 
       <PageHeader eyebrow="Department Intelligence" title={config.label} subtitle={config.subtitle} />
 
-      {/* Veloquity-style top split: who this agent is (left) and what it's
-          reading right now (right), side by side. AI teams get a soft accent-
-          tinted identity card; Security (the one deterministic agent) gets a
-          harder, gradient-free, crisp-bordered treatment so the rules-not-
-          probabilistic nature is felt visually, not just stated. */}
-      <div className="mt-6 grid lg:grid-cols-[1.05fr_1fr] gap-5 items-stretch">
-        {/* LEFT — agent identity */}
+      {/* Vertical stack: who this agent is, then what it's reading right now —
+          each box sized to its OWN content (no shared/stretched height). AI
+          teams get a soft accent-tinted identity card; Security (the one
+          deterministic agent) gets a harder, gradient-free, crisp-bordered
+          treatment so the rules-not-probabilistic nature is felt visually. */}
+      <div className="mt-6 space-y-5">
+        {/* Agent identity */}
         <div
           className={'rounded-xl border px-4 py-4 ' + (config.ai ? 'bg-gradient-to-br from-card to-secondary/20' : 'bg-card')}
           style={{
@@ -183,7 +183,7 @@ function TeamView({ config }: { config: TeamConfig }) {
           </p>
         </div>
 
-        {/* RIGHT — live signal feeding this team, across accounts */}
+        {/* Live signal feeding this team, across accounts */}
         <div className="rounded-xl border border-border bg-card/40 px-4 py-4">
           <p className="text-xs tracking-[0.2em] uppercase mb-1" style={{ color: accent }}>
             {'>'} Live signal · {config.channel}

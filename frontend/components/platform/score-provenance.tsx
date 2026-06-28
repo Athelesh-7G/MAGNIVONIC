@@ -102,7 +102,7 @@ export function ScoreProvenance({
         onClick={() => setOpen((o) => !o)}
         aria-label="How this was scored"
         aria-expanded={open}
-        className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground underline decoration-dotted underline-offset-2 transition-colors align-middle"
+        className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:text-primary/80 underline decoration-dotted underline-offset-2 transition-colors align-middle"
       >
         <Info size={12} strokeWidth={2} />
         {label}

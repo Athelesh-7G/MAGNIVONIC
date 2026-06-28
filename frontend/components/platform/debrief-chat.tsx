@@ -159,11 +159,11 @@ function DebriefResult({ result, department }: { result: DebriefResponse; depart
   const precedentCount = result.precedents.length
   const evidenceCount = result.evidence_used.length
   return (
-    // Veloquity-style split: the answer reads on the left, the evidence it was
-    // built from stays pinned alongside on the right — always visible, never
-    // collapsed. On narrow screens it stacks (answer, then evidence).
-    <div className="grid lg:grid-cols-[1.45fr_1fr] gap-5 items-start">
-      {/* LEFT — the answer */}
+    // Single vertical stack: question (above) → answer → evidence rail, top to
+    // bottom. The evidence is always visible immediately below the answer — no
+    // expand/collapse, no side column (which mismatched heights).
+    <div className="space-y-4">
+      {/* Answer */}
       <section
         className="rounded-2xl border bg-gradient-to-br from-card to-secondary/20 p-5"
         style={{ borderColor: 'color-mix(in oklch, var(--primary) 35%, var(--border))' }}
@@ -173,16 +173,16 @@ function DebriefResult({ result, department }: { result: DebriefResponse; depart
         </p>
         <p className="text-base text-foreground leading-relaxed whitespace-pre-line">{result.answer}</p>
         <p className="mt-3 text-xs text-muted-foreground/60">
-          Grounded only in the cited evidence shown alongside{department ? ` · scoped to ${department}` : ''} · retrieved by pgvector similarity over Aurora organizational memory
+          Grounded only in the cited evidence shown below{department ? ` · scoped to ${department}` : ''} · retrieved by pgvector similarity over Aurora organizational memory
         </p>
       </section>
 
-      {/* RIGHT — the evidence & reasoning trail, always visible */}
+      {/* Evidence & reasoning trail — always visible, directly below the answer */}
       <motion.aside
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25 }}
-        className="space-y-4 rounded-2xl border border-border bg-card/40 p-4 lg:sticky lg:top-20"
+        className="space-y-4 rounded-2xl border border-border bg-card/40 p-4"
       >
         <p className="text-xs uppercase tracking-widest text-foreground flex items-center gap-1.5">
           Evidence &amp; reasoning trail
