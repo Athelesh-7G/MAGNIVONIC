@@ -412,7 +412,7 @@ const INSIGHT_TYPE_SHORT_LABEL: Record<InsightType, string> = {
 
 /** The synthesis-first framing — the calm, org-level statement read BEFORE any
  *  individual finding. Leads with the count and combined confidence (the
- *  "system understood the org" register, like Veloquity's Dashboard banner),
+ *  "system understood the org" register, like the reference app's Dashboard banner),
  *  not with the highest-severity card. Insight types are shown at parity. */
 function SynthesisHeader({
   insights,

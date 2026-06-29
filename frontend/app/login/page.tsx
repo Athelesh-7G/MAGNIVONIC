@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { MagnivonicMark } from '@/components/nav'
+import { MagnivonicLockup } from '@/components/brand'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -59,9 +59,8 @@ export default function LoginPage() {
       <div className="relative flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-[400px]">
           {/* Brand lockup */}
-          <a href="/" className="flex items-center gap-2.5 justify-center mb-8">
-            <MagnivonicMark size={30} />
-            <span className="text-[18px] font-semibold tracking-tight">Magnivonic</span>
+          <a href="/" className="flex items-center justify-center mb-8" aria-label="Magnivonic home">
+            <MagnivonicLockup height={40} />
           </a>
 
           <div className="rounded-2xl border border-border bg-card shadow-[0_20px_60px_-20px_oklch(0.2_0.05_293/0.25)] p-8">

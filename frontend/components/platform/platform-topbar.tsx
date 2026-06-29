@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Moon, Sun, Power, LogOut } from 'lucide-react'
 import { useTheme } from '@/components/providers'
-import { MagnivonicMark } from '@/components/nav'
+import { MagnivonicLockup } from '@/components/brand'
 import { useActivation, resetActivation } from '@/lib/activation'
 import { OK, CRIT } from '@/components/platform/signal-ui'
 
-/** Veloquity-style 64px sticky app header: backdrop-blur, brand left, theme right. */
+/** reference-app-style 64px sticky app header: backdrop-blur, brand left, theme right. */
 export function PlatformTopbar() {
   const { theme, toggle } = useTheme()
   const { activated } = useActivation()
@@ -17,9 +17,8 @@ export function PlatformTopbar() {
     <header className="h-16 border-b border-border bg-background/80 backdrop-blur-xl sticky top-0 z-40">
       <div className="flex items-center justify-between h-full px-4">
         <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-            <MagnivonicMark size={24} />
-            <span className="text-base font-semibold tracking-tight text-foreground">Magnivonic</span>
+          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity" aria-label="Magnivonic home">
+            <MagnivonicLockup height={30} />
           </Link>
           <div className="h-6 w-px bg-border hidden md:block" />
           {/* The cross-page "alive" signal — at rest until the first scan, then

@@ -31,6 +31,7 @@ export function DebriefChat({
   examples = DEFAULT_EXAMPLES,
   placeholder = 'Ask about an account, a risk, or what the organization has learned before…',
   boxed = false,
+  accent,
 }: {
   department?: TeamDepartment
   examples?: string[]
@@ -38,6 +39,9 @@ export function DebriefChat({
   /** Contain the input in a bordered card (team pages) to match their other
    *  boxed sections. The dedicated Debrief page leaves it open. */
   boxed?: boolean
+  /** Team accent colour — tints the boxed input's border + subtle background so
+   *  the chat reads as part of that team's surface. */
+  accent?: string
 }) {
   const [question, setQuestion] = useState('')
   const [status, setStatus] = useState<Status>('idle')
@@ -75,7 +79,17 @@ export function DebriefChat({
           e.preventDefault()
           run(question)
         }}
-        className={boxed ? 'rounded-xl border border-border bg-card/60 p-4' : undefined}
+        className={boxed ? 'rounded-xl border p-4' : undefined}
+        style={
+          boxed
+            ? accent
+              ? {
+                  borderColor: `color-mix(in oklch, ${accent} 40%, var(--border))`,
+                  background: `color-mix(in oklch, ${accent} 5%, var(--card))`,
+                }
+              : { borderColor: 'var(--border)', background: 'color-mix(in oklch, var(--card) 60%, transparent)' }
+            : undefined
+        }
       >
         <div className="flex items-start gap-3">
           <textarea
@@ -258,35 +272,49 @@ function DebriefResult({ result, department }: { result: DebriefResponse; depart
           )}
         </section>
 
-        {/* Active risks */}
-        <section>
-          <p className="text-[11px] uppercase tracking-widest text-muted-foreground mb-2">
-            Active risk{department ? ` · ${department}-directed` : ''} considered
-          </p>
-          {result.evidence_used.length > 0 ? (
-            <div className="space-y-2">
-              {result.evidence_used.map((e) => (
-                <div key={e.id} className="rounded-lg border border-border bg-muted/30 p-3">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    {/* On team pages severity is already shown on the "Insights
-                        directed at" cards — don't re-badge here. The standalone
-                        Debrief page keeps it (no duplication there). */}
-                    {department ? null : <SeverityBadge severity={e.severity} />}
-                    <span className="text-xs font-semibold text-foreground">{e.title}</span>
-                    <span className="text-xs text-muted-foreground ml-auto">
-                      {formatCurrency(e.revenue_exposure)} · {formatTimestamp(e.created_at)}
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{e.root_cause}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-xs text-muted-foreground">
-              No active{department ? ` ${department}-directed` : ''} risk matched — answered from past incidents only.
+        {/* Active risks. On a team page these are already the "Insights directed
+            at {team}" cards below — so we don't re-render them here (it read as
+            duplication); a small pointer links down to them instead. The
+            standalone Debrief page has no such section, so it shows them fully. */}
+        {department ? (
+          result.evidence_used.length > 0 ? (
+            <section>
+              <p className="text-[11px] uppercase tracking-widest text-muted-foreground mb-2">
+                Active risk · {department}-directed
+              </p>
+              <a href="#team-insights" className="text-xs font-medium text-primary hover:underline">
+                {result.evidence_used.length} {department}-directed insight
+                {result.evidence_used.length === 1 ? '' : 's'} considered — see them in full below ↓
+              </a>
+            </section>
+          ) : null
+        ) : (
+          <section>
+            <p className="text-[11px] uppercase tracking-widest text-muted-foreground mb-2">
+              Active risk considered
             </p>
-          )}
-        </section>
+            {result.evidence_used.length > 0 ? (
+              <div className="space-y-2">
+                {result.evidence_used.map((e) => (
+                  <div key={e.id} className="rounded-lg border border-border bg-muted/30 p-3">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <SeverityBadge severity={e.severity} />
+                      <span className="text-xs font-semibold text-foreground">{e.title}</span>
+                      <span className="text-xs text-muted-foreground ml-auto">
+                        {formatCurrency(e.revenue_exposure)} · {formatTimestamp(e.created_at)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{e.root_cause}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                No active risk matched — answered from past incidents only.
+              </p>
+            )}
+          </section>
+        )}
       </motion.aside>
     </div>
   )

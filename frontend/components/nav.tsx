@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Moon, Sun, LogOut, ArrowRight } from 'lucide-react'
 import { useTheme } from '@/components/providers'
+import { MagnivonicLockup } from '@/components/brand'
 
 const NAV_LINKS = [
   { label: 'Platform',     href: '/#platform' },
@@ -17,12 +18,9 @@ export function Nav() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="max-w-[1280px] mx-auto px-8 h-[60px] flex items-center justify-between">
 
-        {/* Logo + wordmark */}
-        <a href="/" className="flex items-center gap-2.5">
-          <MagnivonicMark />
-          <span className="text-[15px] font-semibold tracking-tight text-foreground select-none">
-            Magnivonic
-          </span>
+        {/* Logo lockup (mark + wordmark), ~30px tall */}
+        <a href="/" className="flex items-center" aria-label="Magnivonic home">
+          <MagnivonicLockup height={30} />
         </a>
 
         {/* Center nav */}
@@ -149,50 +147,5 @@ function AccountControl() {
         </div>
       )}
     </div>
-  )
-}
-
-/**
- * MagnivonicMark — the Monogram Peak.
- * A geometric "M" whose inner diagonals rise to a raised centre vertex — a peak
- * (magnitude / intelligence rising), with the negative space beneath reading as
- * a subtle "V" (Magni·vonic). Name-tied and ownable: hard to mistake for stock
- * aperture/sparkle iconography. A single round-joined polyline, so it stays
- * crisp from favicon size up and renders identically on server and client.
- */
-// Pre-rounded literal coordinates (no runtime math → no hydration drift).
-// Side stems (x=5, x=19) run y19→y11; inner diagonals rise to the apex (12, 4.5).
-const PEAK_PATH = 'M5 19 L5 11 L12 4.5 L19 11 L19 19'
-
-export function MagnivonicMark({ size = 24, plain = false }: { size?: number; plain?: boolean }) {
-  const glyph = (stroke: string) => (
-    <svg
-      width={plain ? size : size * 0.64}
-      height={plain ? size : size * 0.64}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d={PEAK_PATH}
-        stroke={stroke}
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-
-  // Plain glyph (inherits currentColor) — used on dark cinematic surfaces
-  if (plain) return glyph('currentColor')
-
-  // Badge lockup — used in nav + footer
-  return (
-    <span
-      className="inline-flex items-center justify-center rounded-[7px] bg-primary shrink-0"
-      style={{ width: size, height: size }}
-    >
-      {glyph('var(--primary-foreground)')}
-    </span>
   )
 }

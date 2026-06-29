@@ -23,13 +23,14 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { MagnivonicMark } from '@/components/brand'
 
 type NavItem = { label: string; href: string; icon: ElementType }
 type NavSection = { title: string; items: NavItem[] }
 
 // The nav groups ARE the narrative spine, top-down: Executive Intelligence →
 // Department Intelligence → Specialized Agents → Signals. The pipeline is felt
-// structurally (the way Veloquity's rail reads Data Ingestion → Evidence →
+// structurally (the way the reference app's rail reads Data Ingestion → Evidence →
 // Decision → Intelligence Engine), not just stated once.
 const NAV_SECTIONS: NavSection[] = [
   {
@@ -102,6 +103,17 @@ export function PlatformSidebar() {
       transition={{ duration: 0.2 }}
       className="shrink-0 border-r border-border bg-card flex flex-col h-[calc(100vh-64px)] sticky top-16 overflow-hidden"
     >
+      {/* Collapsed-state brand mark (the full lockup lives in the topbar). */}
+      {collapsed && (
+        <Link
+          href="/"
+          aria-label="Magnivonic home"
+          className="flex items-center justify-center pt-4 pb-1 text-foreground hover:opacity-80 transition-opacity"
+        >
+          <MagnivonicMark size={22} />
+        </Link>
+      )}
+
       <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-2">
         {NAV_SECTIONS.map((section) => (
           <div key={section.title} className="mb-5">
@@ -137,7 +149,7 @@ export function PlatformSidebar() {
                     <Icon className={cn('w-4 h-4 shrink-0', active && 'text-primary')} strokeWidth={2} />
                     {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
 
-                    {/* Hover tooltip when collapsed — Veloquity's collapsed-rail pattern */}
+                    {/* Hover tooltip when collapsed — the reference app's collapsed-rail pattern */}
                     {collapsed && (
                       <span className="absolute left-full ml-2 px-2 py-1 rounded-md bg-popover text-popover-foreground text-sm shadow-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
                         {item.label}

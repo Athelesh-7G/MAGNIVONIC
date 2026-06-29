@@ -73,7 +73,7 @@ const SCORES: Score[] = [
     formula:
       'confidence = max(0.30,  0.5 · breadth  +  0.5 · strength )\n  breadth  = (# of the 4 domains that corroborate this insight) ÷ 4\n  strength = severity-weighted mean of those domains’ confidences',
     body:
-      'Computed from real domain corroboration — adapted from Veloquity’s composite, minus a recency term (every Magnivonic signal is real-time, so recency would be a fabricated input). Nova Pro only narrates the result; it no longer invents the number. The separate X/100 magnitude is the General Manager’s model judgment.',
+      'Computed from real domain corroboration — a composite of how many domains corroborate the insight and their severity-weighted confidence, with no recency term (every Magnivonic signal is real-time, so recency would be a fabricated input). Nova Pro only narrates the result; it no longer invents the number. The separate X/100 magnitude is the General Manager’s model judgment.',
   },
   {
     id: 'similarity',

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 import type { Risk, InsightType } from '@/lib/api'
 
 /**
- * Stat — the Veloquity StatCard pairing: a prominent bold value over a small
+ * Stat — the the reference app StatCard pairing: a prominent bold value over a small
  * muted label. tabular-nums keeps numeric values aligned. Used wherever a
  * big-number/small-label pairing appears (BriefCard metrics, etc.).
  */
@@ -40,7 +40,7 @@ export function Stat({
 // ── Semantic status colors (work in light + dark) ───────────────────────────
 // Extracted from the original live-platform.tsx so every platform surface
 // shares one source of truth rather than re-declaring these inline.
-// Matched to Veloquity's component semantic trio (Tailwind green/orange/red-500),
+// Matched to the reference app's component semantic trio (Tailwind green/orange/red-500),
 // converted to OKLCH. Reserved for severity/health — distinct from the violet accent.
 export const OK = 'oklch(0.723 0.192 149.6)'
 export const WARN = 'oklch(0.705 0.187 47.6)'

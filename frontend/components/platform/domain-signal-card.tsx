@@ -5,7 +5,7 @@ import { SeverityBadge, OK } from './signal-ui'
 export type RawSignal = { label: string; value: string }
 
 // The real enterprise channel each domain's signal comes from — shown as
-// source attribution on the evidence section (Veloquity names channels, not
+// source attribution on the evidence section (the reference app names channels, not
 // "source: app_store").
 const DOMAIN_CHANNEL: Record<string, string> = {
   Revenue: 'CRM',

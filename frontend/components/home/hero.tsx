@@ -17,7 +17,7 @@ const LOOP = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null)
-  // Mouse-follow spotlight (Veloquity's hero pattern) + scroll parallax on the
+  // Mouse-follow spotlight (the reference app's hero pattern) + scroll parallax on the
   // animation layer – purposeful depth, not decoration.
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -87,7 +87,7 @@ export function Hero() {
 
         {/* Subtitle – one coherent thought */}
         <p
-          className="mt-7 text-[19px] md:text-[20px] leading-relaxed text-muted-foreground max-w-[860px] mx-auto text-pretty animate-fade-up"
+          className="mt-7 text-[19px] md:text-[20px] leading-relaxed text-foreground max-w-[860px] mx-auto text-pretty animate-fade-up"
           style={{ animationDelay: '0.12s' }}
         >
           The zero-stack command center for cross-domain enterprise intelligence. Magnivonic
@@ -120,7 +120,7 @@ export function Hero() {
           className="w-full max-w-[940px] mx-auto mt-8 animate-fade-up"
           style={{ animationDelay: '0.26s' }}
         >
-          <p className="font-mono text-[13px] tracking-[0.25em] uppercase text-foreground/70 mb-4">
+          <p className="font-mono text-[13px] tracking-[0.25em] uppercase text-foreground mb-4">
             Built for every kind of organization, in every industry
           </p>
           <div className="border-y border-border py-4 relative overflow-hidden group">

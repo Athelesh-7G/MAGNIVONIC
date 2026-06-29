@@ -1,4 +1,4 @@
-import { MagnivonicMark } from '@/components/nav'
+import { MagnivonicLockup } from '@/components/brand'
 
 const FOOTER_COLS = [
   {
@@ -39,9 +39,8 @@ export function SiteFooter() {
 
           {/* Brand column */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <MagnivonicMark size={20} />
-              <span className="text-[14px] font-semibold text-foreground">Magnivonic</span>
+            <div className="flex items-center mb-4">
+              <MagnivonicLockup height={28} />
             </div>
             <p className="text-[13px] text-muted-foreground leading-relaxed max-w-[240px]">
               The core organizational intelligence layer for enterprises &ndash; reading, coordinating, and acting across every department, continuously.

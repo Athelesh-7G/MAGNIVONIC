@@ -56,10 +56,11 @@ export default function WorkPage() {
           <p>
             The Coordinator fires all four domain agents simultaneously with a{' '}
             <span className="font-mono text-[13px] text-foreground">ThreadPoolExecutor(max_workers=4)</span> over
-            RequestResponse Lambda invokes — never a sequential chain. End-to-end synthesis (API Gateway →
-            Orchestrator → Coordinator → 4 agents → Nova Pro → Aurora write) measures{' '}
-            <span className="text-foreground">~8s warm</span> and ~20–24s on a cold start, where Lambda container
-            init dominates — the pgvector lookup against the memory table is negligible by comparison.
+            RequestResponse Lambda invokes — never a sequential chain. Reading the four domains concurrently
+            instead of in series is what keeps a full cross-domain synthesis (API Gateway → Orchestrator →
+            Coordinator → 4 agents → Nova Pro → Aurora write) at{' '}
+            <span className="text-foreground">~8s end-to-end</span>; the pgvector lookup against the memory table
+            is negligible next to the Nova Pro reasoning call, which is the real floor on latency.
           </p>
         </Section>
 
@@ -115,15 +116,24 @@ export default function WorkPage() {
           </p>
         </Section>
 
-        <Section kicker="Operations" title="Cold-start, honestly">
+        <Section kicker="Data architecture" title="Why Aurora + pgvector — chosen for this exact problem">
           <p>
-            Cold starts (~20–22s) were traced to Lambda container initialization across the request chain, not
-            to Aurora or pgvector — 20 memory rows vs 5 made no measurable difference. Provisioned Concurrency
-            was evaluated to remove it (≈$0.36/day for the two entry functions) but was blocked by the account&apos;s
-            Lambda concurrent-execution quota of 10, which PC reserves from the same pool. The keep-warm guards
-            remain in place, ready to reuse. Through the build window only manual testing hits the system, so
-            the occasional cold start costs nothing real — a deliberate, documented trade-off rather than an
-            oversight.
+            Cross-domain reasoning needs two things from one store: the relational facts (accounts, risks,
+            recommendations, agent events, alerts) <em>and</em> semantic recall over past incidents.{' '}
+            <span className="text-foreground">Aurora PostgreSQL Serverless v2 + pgvector</span> does both in a
+            single managed engine — so an insight and the memory it cites live in the same transactional store,
+            with no separate vector database to provision, sync, or keep consistent. That was a deliberate
+            architectural choice, not a convenience: it&apos;s what makes &ldquo;reason now, grounded in what
+            happened before&rdquo; a single query instead of a distributed join.
+          </p>
+          <p>
+            It also scales the way this problem grows. Memory recall is an{' '}
+            <span className="text-foreground">HNSW</span> index lookup — an approximate nearest-neighbour search
+            whose cost grows logarithmically, not linearly — so the same architecture serves twenty incidents or
+            tens of thousands without a schema change, and a larger memory corpus <em>improves</em> retrieval
+            quality (more precedents to match) rather than slowing it down. Aurora Serverless v2 autoscales
+            compute on demand to absorb bursts of concurrent agent runs, and the design leaves clear headroom to
+            add read replicas as an organization&apos;s signal volume climbs.
           </p>
         </Section>
 

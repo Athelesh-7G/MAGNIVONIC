@@ -21,8 +21,9 @@ type TeamConfig = {
   subtitle: string
   /** false = deterministic (Security); true = Nova-backed reasoning agent. */
   ai: boolean
-  /** Per-domain accent, grounded in the domain's nature — Security's is a cool
-   *  slate to read as deterministic/auditable, not the warm AI palette. */
+  /** Per-domain accent, grounded in the domain's nature — Security's is a clean
+   *  cyan; its deterministic nature is signalled by the crisp, gradient-free card
+   *  treatment (config.ai === false), not by a dull colour. */
   accent: string
   /** What the agent DOES, in plain language (leads the identity panel). */
   nature: string
@@ -54,7 +55,7 @@ const TEAMS: Record<string, TeamConfig> = {
     slug: 'security',
     department: 'security',
     label: 'Security',
-    accent: 'oklch(0.55 0.045 250)', // slate — deterministic / auditable
+    accent: 'oklch(0.72 0.145 215)', // vibrant cyan — deterministic / auditable (rules, not AI)
     title: 'The Security team’s desk.',
     subtitle:
       'Access and anomalies — everything the engine is flagging on the security side, in one place.',
@@ -218,11 +219,12 @@ function TeamView({ config }: { config: TeamConfig }) {
           examples={config.examples}
           placeholder={`Ask about ${config.label.toLowerCase()} — renewals, risks, what’s worked before…`}
           boxed
+          accent={accent}
         />
       </section>
 
       {/* PRIMARY 2 — insights directed at this team */}
-      <section className="mt-10">
+      <section id="team-insights" className="mt-10 scroll-mt-20">
         <p className="text-xs tracking-[0.2em] uppercase mb-3" style={{ color: accent }}>
           {'>'} Insights directed at {config.label}
         </p>

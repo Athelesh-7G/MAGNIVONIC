@@ -97,17 +97,28 @@ export function resetActivation(): void {
   }
 }
 
+/** Module-level cache of the last-known activation state. Populated only inside
+ *  the effect (post-hydration), so the very first client render still matches
+ *  the server (`false`) — no hydration mismatch. On every SUBSEQUENT mount (e.g.
+ *  navigating between the four team pages, which re-mount the dynamic route) the
+ *  hook initializes from this cache, so it renders the correct state on the
+ *  first frame instead of flashing the AtRest cold-open and then correcting. */
+let _activationCache: { activated: boolean; lastScanAt: string | null } | null = null
+
 /** SSR-safe: renders `false` on the server and the first client paint (so no
- *  hydration mismatch), then resolves to the real localStorage value on mount
- *  and stays in sync with activation events. */
+ *  hydration mismatch), then resolves to the real localStorage value — and on
+ *  later mounts uses the cache so navigation doesn't flash the cold-open. */
 export function useActivation(): { activated: boolean; lastScanAt: string | null } {
-  const [state, setState] = useState<{ activated: boolean; lastScanAt: string | null }>({
-    activated: false,
-    lastScanAt: null,
-  })
+  const [state, setState] = useState<{ activated: boolean; lastScanAt: string | null }>(
+    () => _activationCache ?? { activated: false, lastScanAt: null },
+  )
 
   useEffect(() => {
-    const sync = () => setState({ activated: isActivated(), lastScanAt: getLastScanAt() })
+    const sync = () => {
+      const next = { activated: isActivated(), lastScanAt: getLastScanAt() }
+      _activationCache = next
+      setState(next)
+    }
     sync()
     window.addEventListener(EVENT, sync)
     window.addEventListener('storage', sync)
