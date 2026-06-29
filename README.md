@@ -104,9 +104,7 @@ heart of the product.
 ```
 
 **Zones:** Frontend (Vercel) → API Layer (API Gateway) → Agent Layer (Lambda) →
-Data Layer (Aurora + pgvector) + AI/ML (Bedrock) + Voice (Polly). The full
-component-and-connection breakdown (every edge, direction, and protocol) is in
-[`architecture-spec.md`](architecture-spec.md).
+Data Layer (Aurora + pgvector) + AI/ML (Bedrock) + Voice (Polly).
 
 ---
 
@@ -250,17 +248,3 @@ computed confidence, ask Debrief a question and have the answer read back aloud,
 explore the compounding organizational memory.
 
 ---
-
-## Running Locally
-
-```bash
-cd frontend
-npm install
-# login gate needs these (gitignored .env.local; set the same in Vercel):
-#   ADMIN_USERNAME, ADMIN_PASSWORD, SESSION_SECRET
-npm run dev
-```
-
-The frontend talks to the live AWS API Gateway endpoints; no local backend is
-required to run the UI. See `docs/PROJECT_GUIDE.md` for the full backend/deploy
-reference.
