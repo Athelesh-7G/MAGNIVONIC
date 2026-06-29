@@ -21,9 +21,10 @@ type TeamConfig = {
   subtitle: string
   /** false = deterministic (Security); true = Nova-backed reasoning agent. */
   ai: boolean
-  /** Per-domain accent, grounded in the domain's nature — Security's is a clean
-   *  cyan; its deterministic nature is signalled by the crisp, gradient-free card
-   *  treatment (config.ai === false), not by a dull colour. */
+  /** Per-domain accent, grounded in the domain's nature — Revenue=green,
+   *  Operations=amber, Customer=sky, Security=crimson (all distinct). Security's
+   *  deterministic nature is signalled by the crisp, gradient-free card treatment
+   *  (config.ai === false), not by the colour. */
   accent: string
   /** What the agent DOES, in plain language (leads the identity panel). */
   nature: string
@@ -55,7 +56,7 @@ const TEAMS: Record<string, TeamConfig> = {
     slug: 'security',
     department: 'security',
     label: 'Security',
-    accent: 'oklch(0.72 0.145 215)', // vibrant cyan — deterministic / auditable (rules, not AI)
+    accent: 'oklch(0.585 0.22 18)', // crimson — security alert; distinct from Customer's sky
     title: 'The Security team’s desk.',
     subtitle:
       'Access and anomalies — everything the engine is flagging on the security side, in one place.',

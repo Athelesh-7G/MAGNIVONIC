@@ -244,6 +244,24 @@ def seed(conn):
                 "SLA credits went out the same day and a public post-mortem followed, with the infrastructure hardened to make the failure mode impossible to repeat. Direct CEO outreach retained 11 of the 12; the one departure had already been evaluating alternatives.",
                 4, False, 0, ["security", "operations", "customer"],
             ),
+            # Call-transcript / voice-note evidence — text representing real
+            # conversations (a "Call transcript" / "Voice note" channel tag, shown
+            # on the memory card). Evidence-texture, not an audio capability.
+            (
+                "Call transcript — CS lead and the customer's champion at Northbridge Systems, recorded on the renewal-risk line. "
+                "Champion: \"Honestly, the export bug last month cost us two days at close, and leadership is now asking why we're renewing at all.\" "
+                "CS: \"That's fair — here's exactly what we changed, and the SLA credit we've already applied to your account.\" "
+                "The champion warmed once the fix and the credit were on the table, but mentioned a competing tool was already in a bake-off with their ops team.",
+                "Escalated to the AE within the hour with the champion's exact words. A tailored renewal package and a joint roadmap call closed it the following week; the competing bake-off was dropped.",
+                2, True, 0, ["Call transcript", "customer", "revenue"],
+            ),
+            (
+                "Voice note — security on-call, left on the incident bridge at 02:14 after the access anomaly on a mid-market account. "
+                "On-call: \"Confirmed the spike is a leaked CI token, not the customer. Fourteen IPs across three regions, all hitting the export endpoint. "
+                "I've rotated the token and killed the active sessions — no data left the platform. Looping the account team in now so they can reach the customer before they notice.\"",
+                "Token rotated and sessions terminated during the call; the customer was notified proactively the same morning with a short write-up. The account stayed and took up the quarterly security-audit offer.",
+                1, True, 0, ["Voice note", "security"],
+            ),
         ]
         for summary, outcome, hours, churn, saved, agents in memories:
             cur.execute(

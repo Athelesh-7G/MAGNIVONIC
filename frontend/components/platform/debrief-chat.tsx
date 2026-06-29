@@ -1,9 +1,11 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import { Volume2, Square } from 'lucide-react'
 import {
   debrief,
+  speakAnswer,
   formatCurrency,
   ApiError,
   type DebriefResponse,
@@ -182,9 +184,12 @@ function DebriefResult({ result, department }: { result: DebriefResponse; depart
         className="rounded-2xl border bg-gradient-to-br from-card to-secondary/20 p-5"
         style={{ borderColor: 'color-mix(in oklch, var(--primary) 35%, var(--border))' }}
       >
-        <p className="text-xs uppercase tracking-widest text-primary mb-2">
-          Answer{department ? ` · ${department} team` : ''}
-        </p>
+        <div className="flex items-center justify-between gap-3 mb-2">
+          <p className="text-xs uppercase tracking-widest text-primary">
+            Answer{department ? ` · ${department} team` : ''}
+          </p>
+          <PlayAnswerButton text={result.answer} />
+        </div>
         <p className="text-base text-foreground leading-relaxed whitespace-pre-line">{result.answer}</p>
         <p className="mt-3 text-xs text-muted-foreground/60">
           Grounded only in the cited evidence shown below{department ? ` · scoped to ${department}` : ''} · retrieved by pgvector similarity over Aurora organizational memory
@@ -317,6 +322,60 @@ function DebriefResult({ result, department }: { result: DebriefResponse; depart
         )}
       </motion.aside>
     </div>
+  )
+}
+
+/** Plays the final ANSWER text as speech via Amazon Polly (POST /speak). Only
+ *  the answer is spoken — never the evidence trail. Simple idle/loading/playing
+ *  states, no picker or waveform. */
+function PlayAnswerButton({ text }: { text: string }) {
+  const [status, setStatus] = useState<'idle' | 'loading' | 'playing' | 'error'>('idle')
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  // Clean up audio on unmount.
+  useEffect(() => () => { audioRef.current?.pause(); audioRef.current = null }, [])
+
+  async function play() {
+    if (status === 'playing') {
+      audioRef.current?.pause()
+      audioRef.current = null
+      setStatus('idle')
+      return
+    }
+    setStatus('loading')
+    try {
+      const res = await speakAnswer(text)
+      const audio = new Audio(`data:audio/mp3;base64,${res.audio}`)
+      audioRef.current = audio
+      audio.onended = () => setStatus('idle')
+      audio.onerror = () => setStatus('error')
+      await audio.play()
+      setStatus('playing')
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  const label =
+    status === 'loading' ? 'Synthesizing…' : status === 'playing' ? 'Stop' : status === 'error' ? 'Audio failed' : 'Play answer'
+
+  return (
+    <button
+      type="button"
+      onClick={play}
+      disabled={status === 'loading'}
+      className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 disabled:opacity-60 transition-colors shrink-0"
+      aria-label="Play the answer as speech"
+    >
+      {status === 'loading' ? (
+        <span className="w-3 h-3 rounded-full border-[1.5px] border-primary border-t-transparent animate-spin" />
+      ) : status === 'playing' ? (
+        <Square size={12} strokeWidth={2.5} className="fill-current" />
+      ) : (
+        <Volume2 size={13} strokeWidth={2} />
+      )}
+      {label}
+    </button>
   )
 }
 

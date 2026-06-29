@@ -265,6 +265,23 @@ export const sendSlackTemplate = (template: SlackTemplate): Promise<SlackSendRes
     15_000,
   )
 
+// ── Voice output (POST /speak — Amazon Polly) ───────────────────────────────
+
+export interface SpeakResponse {
+  audio: string // base64-encoded MP3
+  format: string
+  voice: string
+}
+
+/** Convert answer text to speech via Amazon Polly (neural). Returns a base64
+ *  MP3 the client plays directly — no S3/presign. */
+export const speakAnswer = (text: string): Promise<SpeakResponse> =>
+  apiFetch<SpeakResponse>(
+    '/speak',
+    { method: 'POST', body: JSON.stringify({ text }) },
+    20_000,
+  )
+
 // ── Fetchers ───────────────────────────────────────────────────────────────
 
 export const fetchHealth = (): Promise<HealthResponse> =>
