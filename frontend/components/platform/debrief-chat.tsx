@@ -11,7 +11,7 @@ import {
   type DebriefResponse,
   type TeamDepartment,
 } from '@/lib/api'
-import { SeverityBadge, formatTimestamp, OK, CRIT, Stat } from '@/components/platform/signal-ui'
+import { SeverityBadge, formatTimestamp, OK, CRIT, WARN, Stat } from '@/components/platform/signal-ui'
 import { ScoreProvenance } from '@/components/platform/score-provenance'
 
 type Status = 'idle' | 'loading' | 'done' | 'error'
@@ -360,19 +360,29 @@ function PlayAnswerButton({ text }: { text: string }) {
     status === 'loading' ? 'Synthesizing…' : status === 'playing' ? 'Stop' : status === 'error' ? 'Audio failed' : 'Play answer'
 
   return (
+    // Distinct ORANGE, boxed control — reads as its own feature, clearly apart
+    // from the violet "How this was scored" provenance link.
     <button
       type="button"
       onClick={play}
       disabled={status === 'loading'}
-      className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 disabled:opacity-60 transition-colors shrink-0"
+      className="inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition-colors hover:opacity-80 disabled:opacity-60 shrink-0"
+      style={{
+        color: WARN,
+        borderColor: `color-mix(in oklch, ${WARN} 45%, transparent)`,
+        background: `color-mix(in oklch, ${WARN} 12%, transparent)`,
+      }}
       aria-label="Play the answer as speech"
     >
       {status === 'loading' ? (
-        <span className="w-3 h-3 rounded-full border-[1.5px] border-primary border-t-transparent animate-spin" />
+        <span
+          className="w-3 h-3 rounded-full border-[1.5px] border-t-transparent animate-spin"
+          style={{ borderColor: WARN, borderTopColor: 'transparent' }}
+        />
       ) : status === 'playing' ? (
         <Square size={12} strokeWidth={2.5} className="fill-current" />
       ) : (
-        <Volume2 size={13} strokeWidth={2} />
+        <Volume2 size={14} strokeWidth={2.2} />
       )}
       {label}
     </button>

@@ -1,33 +1,34 @@
-# magnivonic-marketing-site
+# Magnivonic — Frontend
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
+The Next.js 16 (Turbopack) application for Magnivonic, **built with [v0](https://v0.dev)**
+and **deployed on Vercel**. It serves two surfaces from one codebase:
 
-## Built with v0
+- **Marketing site** (`app/page.tsx` + `components/home/*`) — public
+- **Live platform** (`app/platform/*`) — login-gated; talks to the real AWS API
+  Gateway endpoints (every score, citation, and alert is a live call)
 
-This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
-
-[Continue working on v0 →](https://v0.app/chat/projects/prj_Z9kfswlTGnkp0yuMaY7KbYfz5K3j)
-
-## Getting Started
-
-First, run the development server:
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The login gate (`proxy.ts`) protects `/platform/*` and needs three env vars in a
+gitignored `.env.local` (and the same in Vercel project settings):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+ADMIN_USERNAME=...
+ADMIN_PASSWORD=...
+SESSION_SECRET=...
+```
 
-## Learn More
+No local backend is required to run the UI — it calls the deployed AWS endpoints.
 
-To learn more, take a look at the following resources:
+## Where things are
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
+- `app/` — routes (marketing, `platform/*`, `login`, `api/{login,logout}`)
+- `components/{home,platform}/*`, `components/brand.tsx` — UI
+- `lib/` — `api.ts` (typed AWS client), `activation.ts`, `auth.ts`
+
+See `../docs/PROJECT_GUIDE.md` for the full system reference.

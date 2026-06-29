@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { ChevronDown } from 'lucide-react'
 import type { Risk, Insight, InsightType } from '@/lib/api'
 import { formatCurrency } from '@/lib/api'
 import { SeverityBadge, InsightTypeBadge, insightTypeColor, formatTimestamp, OK, Stat } from './signal-ui'
@@ -127,7 +128,7 @@ export function BriefCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: Math.min(index * 0.05, 0.4), ease: 'easeOut' }}
       whileHover={effectiveVariant === 'feed' && !expanded ? { y: -4 } : undefined}
-      className="rounded-xl border bg-gradient-to-br from-card to-secondary/20 overflow-hidden"
+      className="group/card rounded-xl border bg-gradient-to-br from-card to-secondary/20 overflow-hidden"
       style={{ borderColor: `color-mix(in oklch, ${accent} 30%, var(--border))` }}
     >
       <div className="relative">
@@ -193,7 +194,14 @@ export function BriefCard({
               />
             ))}
             {effectiveVariant === 'feed' ? (
-              <span className="text-muted-foreground text-xs mt-2 w-3 text-center">{expanded ? '↑' : '↓'}</span>
+              <span className="flex items-center gap-1 mt-1.5 text-xs text-muted-foreground group-hover/card:text-foreground transition-colors shrink-0">
+                <span className="hidden sm:inline whitespace-nowrap">{expanded ? 'Hide' : 'View full analysis'}</span>
+                <ChevronDown
+                  size={15}
+                  strokeWidth={2.2}
+                  className={'transition-transform ' + (expanded ? 'rotate-180' : '')}
+                />
+              </span>
             ) : null}
           </div>
         </button>
@@ -207,15 +215,20 @@ export function BriefCard({
               Cross-domain synthesis
             </p>
             <p className="text-sm text-foreground/85 leading-relaxed">{rootCause}</p>
-            {isLive ? (
-              <div className="flex items-start gap-1.5 mt-2">
-                <p className="text-xs text-muted-foreground leading-relaxed flex-1">
-                  <span className="font-semibold text-foreground/70">Why this confidence &amp; score: </span>
-                  {live!.confidence_narrative || 'The General Manager weighed how many independent domains corroborate this finding.'}
-                </p>
-                <ScoreProvenance kind="gm" />
-              </div>
-            ) : null}
+            {/* "How this was scored" — shown for BOTH live insights and historical
+                risk cards, so every insights card (Canvas, Briefs, Dossiers, and
+                every team page's "Insights directed at" section — Security
+                included) carries the provenance control consistently. */}
+            <div className="flex items-start gap-1.5 mt-2">
+              <p className="text-xs text-muted-foreground leading-relaxed flex-1">
+                <span className="font-semibold text-foreground/70">Why this confidence &amp; score: </span>
+                {isLive
+                  ? live!.confidence_narrative ||
+                    'The General Manager weighed how many independent domains corroborate this finding.'
+                  : 'Computed from how many domains corroborate this finding, weighted by their severity.'}
+              </p>
+              <ScoreProvenance kind="gm" />
+            </div>
           </div>
 
           {/* Live-only: explicit cross-domain connections */}

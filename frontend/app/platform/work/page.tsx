@@ -100,6 +100,7 @@ export default function WorkPage() {
           <ul className="list-disc pl-5 space-y-1">
             <li><span className="text-foreground">AWS Lambda (Python 3.12)</span> — all 6 agents + the API handlers, on a shared layer.</li>
             <li><span className="text-foreground">Amazon Bedrock — Nova Pro</span> (<span className="font-mono text-[12px]">us.amazon.nova-pro-v1:0</span>) for synthesis/narration; <span className="text-foreground">Titan Embed V2</span> for memory vectors.</li>
+            <li><span className="text-foreground">Amazon Polly</span> (neural) — converts a Debrief answer to speech on demand, so a decision-maker can hear the synthesized brief, not just read it.</li>
             <li><span className="text-foreground">Aurora PostgreSQL Serverless v2 + pgvector</span> — both the relational store (customers, risks, recommendations, agent_events, slack_alerts) and the HNSW vector index for memory.</li>
             <li><span className="text-foreground">API Gateway (REST)</span> — the judge-facing endpoints; <span className="text-foreground">EventBridge</span> for background agent events; <span className="text-foreground">Secrets Manager</span> for Aurora / GitHub PAT / Slack webhook.</li>
             <li>Real outbound integrations: <span className="text-foreground">GitHub API</span> (live delivery signals) and <span className="text-foreground">Slack</span> (executive alerts).</li>
@@ -140,9 +141,30 @@ export default function WorkPage() {
         <Section kicker="Frontend" title="One operating system, two surfaces">
           <p>
             A public marketing site and the gated live platform (this app) share one identity, built on{' '}
-            <span className="text-foreground">Next.js 16</span> + Turbopack and deployed on{' '}
-            <span className="text-foreground">Vercel</span>. The platform talks only to the real AWS endpoints —
-            every score, citation, and alert on these pages comes from a live call, not a fixture.
+            <span className="text-foreground">Next.js 16</span> + Turbopack. The marketing site was built with{' '}
+            <span className="text-foreground">v0</span>, and both surfaces deploy on{' '}
+            <span className="text-foreground">Vercel</span> — the &ldquo;Vercel&rdquo; half of the zero-stack,
+            AWS × Vercel build. The platform talks only to the real AWS endpoints; every score, citation, and
+            alert on these pages comes from a live call, not a fixture.
+          </p>
+        </Section>
+
+        <Section kicker="Latency engineering" title="Cold start: measured, isolated, and a known lever">
+          <p>
+            The ~8s warm path has one variable: a cold Lambda container adds initialization time across the
+            request chain. That cost was traced precisely — it&apos;s container init, <em>not</em> Aurora or
+            pgvector (20 memory rows vs 5 made no measurable difference), so the data layer is already where it
+            needs to be. The lever for removing it is <span className="text-foreground">Provisioned
+            Concurrency</span> across the real agent pipeline — the four domain agents, the Chief of Staff, and
+            the General Manager, not just the API entry point, since a cold start on any of them is user-visible.
+          </p>
+          <p>
+            Enabling it is a configuration change, gated only by an account-level{' '}
+            <span className="text-foreground">Lambda concurrent-executions quota</span> (currently 10, which AWS
+            reserves entirely as the unreserved floor — leaving no headroom for provisioned instances on this
+            account). The path forward is a single Service Quotas increase; the architecture itself needs no
+            change to take advantage of it. A deliberate, well-understood operational lever — held until the
+            quota lands — rather than a design constraint.
           </p>
         </Section>
       </div>

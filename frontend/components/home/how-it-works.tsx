@@ -153,7 +153,7 @@ const STEPS = [
     index: '05',
     slug:  'ACT',
     headline: 'One synthesized understanding becomes department-level action.',
-    body: 'A single, coordinated understanding reaches every relevant team with specific recommended actions – a directive delivered the moment it matters, not a report to be reviewed. And anyone can ask in plain language and get an answer that shows its sources first – every claim traced to the live evidence and the past incidents behind it.',
+    body: 'A single, coordinated understanding reaches every relevant team with specific recommended actions – a directive delivered the moment it matters, not a report to be reviewed. And anyone can ask in plain language and get an answer that shows its sources first – every claim traced to the live evidence and the past incidents behind it, and read back aloud on demand.',
     visual: (
       <div className="bg-primary h-full min-h-[280px] rounded-xl p-8 relative overflow-hidden">
         <span className="absolute top-3 left-3 w-2 h-2 border-t border-l border-white/30" />

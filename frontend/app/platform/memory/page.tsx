@@ -3,10 +3,11 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { Volume2, Square, ChevronDown } from 'lucide-react'
 import useSWR from 'swr'
-import { fetchMemory, formatCurrency, type MemoryEntry } from '@/lib/api'
+import { fetchMemory, speakAnswer, formatCurrency, type MemoryEntry } from '@/lib/api'
 import { PageHeader } from '@/components/platform/page-header'
-import { Stat, OK } from '@/components/platform/signal-ui'
+import { Stat, OK, WARN } from '@/components/platform/signal-ui'
 import { AtRest } from '@/components/platform/at-rest'
 import { useActivation } from '@/lib/activation'
 
@@ -171,14 +172,30 @@ function MemoryRow({
       </div>
 
       <div className="px-5 pb-4 space-y-3">
-        {/* The incident that taught it */}
-        <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">From the incident</p>
-          <p className="text-sm text-foreground/90 leading-relaxed">{entry.summary}</p>
-          {entry.outcome ? (
-            <p className="text-sm text-muted-foreground leading-relaxed mt-1">{entry.outcome}</p>
-          ) : null}
-        </div>
+        {/* The incident that taught it. Two channels get extra affordances:
+            a Call transcript is collapsed behind "View transcript"; a Voice note
+            gets a Polly playback button (clearly labelled as synthesized). */}
+        {(() => {
+          const channel = entry.contributing_agents.find(
+            (a) => a === 'Call transcript' || a === 'Voice note',
+          )
+          return (
+            <div>
+              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                {channel ?? 'From the incident'}
+              </p>
+              {channel === 'Call transcript' ? (
+                <CallTranscript text={entry.summary} />
+              ) : (
+                <p className="text-sm text-foreground/90 leading-relaxed">{entry.summary}</p>
+              )}
+              {entry.outcome ? (
+                <p className="text-sm text-muted-foreground leading-relaxed mt-1">{entry.outcome}</p>
+              ) : null}
+              {channel === 'Voice note' ? <VoiceNotePlayer text={entry.summary} /> : null}
+            </div>
+          )
+        })()}
 
         {/* Outcome stats + provenance */}
         <div className="flex items-center justify-between gap-4 flex-wrap pt-1">
@@ -201,5 +218,87 @@ function MemoryRow({
         </div>
       </div>
     </motion.div>
+  )
+}
+
+/** Call transcript — collapsed behind a clear "View transcript" affordance, since
+ *  it's longer quoted dialogue. Text only; no audio. */
+function CallTranscript({ text }: { text: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div>
+      {open ? (
+        <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-line">{text}</p>
+      ) : (
+        <p className="text-sm text-foreground/90 leading-relaxed line-clamp-1">{text}</p>
+      )}
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="inline-flex items-center gap-1 mt-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+      >
+        {open ? 'Hide transcript' : 'View transcript'}
+        <ChevronDown size={14} strokeWidth={2.2} className={'transition-transform ' + (open ? 'rotate-180' : '')} />
+      </button>
+    </div>
+  )
+}
+
+/** Voice note — a real Amazon Polly playback of the note's text, via the existing
+ *  /speak endpoint. Clearly labelled as a SYNTHESIZED reading, not the original
+ *  recording (honesty: this is text rendered to speech, not captured audio). */
+function VoiceNotePlayer({ text }: { text: string }) {
+  const [status, setStatus] = useState<'idle' | 'loading' | 'playing' | 'error'>('idle')
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  useEffect(() => () => { audioRef.current?.pause(); audioRef.current = null }, [])
+
+  async function play() {
+    if (status === 'playing') {
+      audioRef.current?.pause(); audioRef.current = null; setStatus('idle'); return
+    }
+    setStatus('loading')
+    try {
+      const res = await speakAnswer(text)
+      const audio = new Audio(`data:audio/mp3;base64,${res.audio}`)
+      audioRef.current = audio
+      audio.onended = () => setStatus('idle')
+      audio.onerror = () => setStatus('error')
+      await audio.play()
+      setStatus('playing')
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  const label =
+    status === 'loading' ? 'Synthesizing…' : status === 'playing' ? 'Stop' : status === 'error' ? 'Audio failed' : 'Hear this voice note'
+
+  return (
+    <div className="mt-2.5 flex items-center gap-2.5 flex-wrap">
+      <button
+        type="button"
+        onClick={play}
+        disabled={status === 'loading'}
+        className="inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition-colors hover:opacity-80 disabled:opacity-60"
+        style={{
+          color: WARN,
+          borderColor: `color-mix(in oklch, ${WARN} 45%, transparent)`,
+          background: `color-mix(in oklch, ${WARN} 12%, transparent)`,
+        }}
+        aria-label="Play a synthesized reading of this voice note"
+      >
+        {status === 'loading' ? (
+          <span className="w-3 h-3 rounded-full border-[1.5px] border-t-transparent animate-spin" style={{ borderColor: WARN, borderTopColor: 'transparent' }} />
+        ) : status === 'playing' ? (
+          <Square size={12} strokeWidth={2.5} className="fill-current" />
+        ) : (
+          <Volume2 size={14} strokeWidth={2.2} />
+        )}
+        {label}
+      </button>
+      <span className="text-[11px] text-muted-foreground/70 leading-snug">
+        Synthesized voice (Amazon Polly) — a reading of the note&apos;s text, not the original recording.
+      </span>
+    </div>
   )
 }

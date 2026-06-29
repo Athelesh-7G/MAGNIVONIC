@@ -87,12 +87,13 @@ export function Hero() {
 
         {/* Subtitle – one coherent thought */}
         <p
-          className="mt-7 text-[19px] md:text-[20px] leading-relaxed text-foreground max-w-[860px] mx-auto text-pretty animate-fade-up"
+          className="mt-7 text-[18px] md:text-[19px] leading-relaxed text-foreground max-w-[920px] mx-auto text-pretty animate-fade-up"
           style={{ animationDelay: '0.12s' }}
         >
-          The zero-stack command center for cross-domain enterprise intelligence. Magnivonic
-          synchronizes engineering signals, support tickets, and sales pipelines through parallel
-          AI agents to eliminate systemic operational blindness before it impacts your bottom line.
+          The zero-stack command center for cross-domain enterprise intelligence. Magnivonic synchronizes
+          engineering signals, customer conversations, operational metrics, and business workflows through
+          parallel AI agents into a single reasoning layer &ndash; discovering opportunities, risks, and
+          cross-functional patterns to eliminate systemic operational blindness before it impacts your bottom line.
         </p>
 
         {/* CTAs */}

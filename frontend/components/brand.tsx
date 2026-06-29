@@ -38,23 +38,24 @@ export function MagnivonicMark({ size = 24, className }: { size?: number; classN
   )
 }
 
-/** Full lockup (mark + wordmark). `height` in px; theme-swapped black/white. */
+/** Full HORIZONTAL lockup (mark left, wordmark right, vertically centred).
+ *  `height` in px; theme-swapped black/white (identical dimensions). */
 export function MagnivonicLockup({ height = 30, className }: { height?: number; className?: string }) {
-  // Source lockup PNGs are ~609×369 (transparent). width auto via aspect ratio.
+  // Horizontal lockup PNGs are 877×120 (transparent). width auto via ratio.
   const common = 'w-auto select-none'
   const style = { height }
   return (
     <span className={`inline-flex items-center ${className ?? ''}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/logo-magnivonic-black.png"
+        src="/logo-magnivonic-black-h.png"
         alt="Magnivonic"
         style={style}
         className={`${common} block dark:hidden`}
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/logo-magnivonic-white.png"
+        src="/logo-magnivonic-white-h.png"
         alt="Magnivonic"
         style={style}
         className={`${common} hidden dark:block`}
