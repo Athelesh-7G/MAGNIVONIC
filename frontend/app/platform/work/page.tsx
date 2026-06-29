@@ -149,27 +149,9 @@ export default function WorkPage() {
           </p>
         </Section>
 
-        <Section kicker="Latency engineering" title="Cold start: measured, isolated, and a known lever">
-          <p>
-            The ~8s warm path has one variable: a cold Lambda container adds initialization time across the
-            request chain. That cost was traced precisely — it&apos;s container init, <em>not</em> Aurora or
-            pgvector (20 memory rows vs 5 made no measurable difference), so the data layer is already where it
-            needs to be. The lever for removing it is <span className="text-foreground">Provisioned
-            Concurrency</span> across the real agent pipeline — the four domain agents, the Chief of Staff, and
-            the General Manager, not just the API entry point, since a cold start on any of them is user-visible.
-          </p>
-          <p>
-            Enabling it is a configuration change, gated only by an account-level{' '}
-            <span className="text-foreground">Lambda concurrent-executions quota</span> (currently 10, which AWS
-            reserves entirely as the unreserved floor — leaving no headroom for provisioned instances on this
-            account). The path forward is a single Service Quotas increase; the architecture itself needs no
-            change to take advantage of it. A deliberate, well-understood operational lever — held until the
-            quota lands — rather than a design constraint.
-          </p>
-        </Section>
       </div>
 
-      <p className="mt-6 text-xs text-muted-foreground/70">
+      <p className="mt-6 text-xs text-muted-foreground">
         H0 Hackathon · AWS × Vercel · Monetizable B2B App track. Account 082228066878 · us-east-1.
       </p>
     </div>

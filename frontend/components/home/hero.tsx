@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import { motion, useMotionValue, useMotionTemplate, useScroll, useTransform } from 'framer-motion'
 import { SignalFlow } from './signal-flow'
+import { useTheme } from '@/components/providers'
 
 const MARQUEE_ITEMS = [
   'B2B Enterprise SaaS',
@@ -17,6 +18,7 @@ const LOOP = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null)
+  const { theme } = useTheme()
   // Mouse-follow spotlight (the reference app's hero pattern) + scroll parallax on the
   // animation layer – purposeful depth, not decoration.
   const mouseX = useMotionValue(0)
@@ -39,7 +41,7 @@ export function Hero() {
       <div aria-hidden className="absolute inset-0 dot-grid" />
       {/* The signature animation – full-bleed, drifts gently on scroll */}
       <motion.div aria-hidden className="absolute inset-0" style={{ y: flowY }}>
-        <SignalFlow variant="light" />
+        <SignalFlow variant={theme === 'dark' ? 'dark' : 'light'} />
       </motion.div>
       {/* Mouse-follow violet spotlight */}
       <motion.div aria-hidden className="pointer-events-none absolute inset-0 hidden md:block" style={{ background: spotlight }} />

@@ -191,7 +191,7 @@ function DebriefResult({ result, department }: { result: DebriefResponse; depart
           <PlayAnswerButton text={result.answer} />
         </div>
         <p className="text-base text-foreground leading-relaxed whitespace-pre-line">{result.answer}</p>
-        <p className="mt-3 text-xs text-muted-foreground/60">
+        <p className="mt-3 text-xs text-muted-foreground">
           Grounded only in the cited evidence shown below{department ? ` · scoped to ${department}` : ''} · retrieved by pgvector similarity over Aurora organizational memory
         </p>
       </section>
@@ -205,7 +205,7 @@ function DebriefResult({ result, department }: { result: DebriefResponse; depart
       >
         <p className="text-xs uppercase tracking-widest text-foreground flex items-center gap-1.5">
           Evidence &amp; reasoning trail
-          <span className="text-muted-foreground/60 normal-case tracking-normal">
+          <span className="text-muted-foreground normal-case tracking-normal">
             · {precedentCount} past · {evidenceCount} active
           </span>
         </p>
@@ -423,7 +423,7 @@ function DebriefError({
               <>The request did not complete. The service may be warming up — try again in a moment.</>
             )}
           </p>
-          <p className="text-xs text-muted-foreground/60 mt-2">
+          <p className="text-xs text-muted-foreground mt-2">
             elapsed {elapsed.toFixed(1)}s · {info.message}
           </p>
           <button

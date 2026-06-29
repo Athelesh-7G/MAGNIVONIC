@@ -98,7 +98,7 @@ export function DomainSignalCard({
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
             Evidence{DOMAIN_CHANNEL[domain] ? ` · ${DOMAIN_CHANNEL[domain]}` : ''}
           </p>
-          <p className="text-xs text-muted-foreground/70 leading-relaxed">{rawUnavailableNote}</p>
+          <p className="text-xs text-muted-foreground leading-relaxed">{rawUnavailableNote}</p>
         </div>
       ) : null}
     </div>

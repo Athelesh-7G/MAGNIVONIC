@@ -45,7 +45,7 @@ export function SiteFooter() {
             <p className="text-[13px] text-muted-foreground leading-relaxed max-w-[240px]">
               The core organizational intelligence layer for enterprises &ndash; reading, coordinating, and acting across every department, continuously.
             </p>
-            <p className="mt-6 font-mono text-[10px] tracking-[0.15em] uppercase text-muted-foreground/50">
+            <p className="mt-6 font-mono text-[10px] tracking-[0.15em] uppercase text-muted-foreground">
               © 2026 Magnivonic Inc.
             </p>
           </div>
@@ -53,7 +53,7 @@ export function SiteFooter() {
           {/* Link columns */}
           {FOOTER_COLS.map(col => (
             <div key={col.heading}>
-              <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-4">
+              <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-4">
                 {col.heading}
               </p>
               <ul className="space-y-2.5">

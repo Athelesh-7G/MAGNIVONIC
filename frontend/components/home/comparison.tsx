@@ -59,8 +59,8 @@ export function Comparison() {
           <div>
             {/* Header */}
             <div className="grid grid-cols-[1fr_120px_140px] gap-4 pb-3 border-b border-border">
-              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60">Capability</span>
-              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60 text-center">Traditional</span>
+              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Capability</span>
+              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground text-center">Traditional</span>
               <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-primary text-center">Magnivonic</span>
             </div>
 

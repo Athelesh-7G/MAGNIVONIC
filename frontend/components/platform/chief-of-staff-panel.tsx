@@ -71,7 +71,7 @@ export function ChiefOfStaffPanel({ summaries }: { summaries?: Record<string, Ag
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="text-sm font-semibold text-foreground shrink-0">{d.label}</span>
                   {s.signal ? (
-                    <span className="font-mono text-[10px] tracking-wide text-muted-foreground/70 truncate">
+                    <span className="font-mono text-[10px] tracking-wide text-muted-foreground truncate">
                       {s.signal}
                     </span>
                   ) : null}

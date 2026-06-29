@@ -221,7 +221,7 @@ export function BriefCard({
                 included) carries the provenance control consistently. */}
             <div className="flex items-start gap-1.5 mt-2">
               <p className="text-xs text-muted-foreground leading-relaxed flex-1">
-                <span className="font-semibold text-foreground/70">Why this confidence &amp; score: </span>
+                <span className="font-semibold text-foreground/90">Why this confidence &amp; score: </span>
                 {isLive
                   ? live!.confidence_narrative ||
                     'The General Manager weighed how many independent domains corroborate this finding.'

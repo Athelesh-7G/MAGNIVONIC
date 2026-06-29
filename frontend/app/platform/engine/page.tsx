@@ -12,11 +12,13 @@ import { useActivation, markActivated, saveLiveResult, shouldReplay } from '@/li
 
 const STACK = [
   { layer: 'Reasoning / synthesis', tech: 'Amazon Bedrock — Nova Pro', detail: 'us.amazon.nova-pro-v1:0' },
-  { layer: 'Memory embeddings', tech: 'Titan Embed V2', detail: 'amazon.titan-embed-text-v2:0 · 1024-dim' },
+  { layer: 'Memory embeddings', tech: 'Amazon Bedrock — Titan Embed V2', detail: 'amazon.titan-embed-text-v2:0 · 1024-dim' },
   { layer: 'Vector store', tech: 'Aurora PostgreSQL Serverless v2 + pgvector', detail: 'HNSW index · cosine (vector_cosine_ops)' },
-  { layer: 'Compute', tech: 'AWS Lambda · Python 3.12', detail: '4 domain agents fired in parallel (ThreadPoolExecutor)' },
-  { layer: 'API', tech: 'Amazon API Gateway (REST)', detail: 'GET /health · /customers · /risks · /github · /slack · POST /analyze' },
+  { layer: 'Compute', tech: 'AWS Lambda · Python 3.12', detail: '15 functions · 4 domain agents fired in parallel (ThreadPoolExecutor)' },
+  { layer: 'Voice', tech: 'Amazon Polly', detail: 'neural (Matthew) · answer-to-speech via POST /speak' },
+  { layer: 'API', tech: 'Amazon API Gateway (REST)', detail: 'GET /health · /customers · /risks · /github · /slack · /memory · POST /analyze · /debrief · /speak' },
   { layer: 'Events', tech: 'Amazon EventBridge', detail: 'agent + orchestrator event bus' },
+  { layer: 'Secrets', tech: 'AWS Secrets Manager', detail: 'Aurora · GitHub PAT · Slack webhook' },
 ]
 
 // The six real agents in the cascade. Security is deterministic (not AI) — it
@@ -125,7 +127,7 @@ export default function EnginePage() {
             </div>
           ) : null}
         </div>
-        <p className="mt-2 text-xs text-muted-foreground/60">Source: GET /health · live from AWS</p>
+        <p className="mt-2 text-xs text-muted-foreground">Source: GET /health · live from AWS</p>
       </div>
 
       {/* Agent run-state board — the live engine, with a real trigger */}
@@ -216,7 +218,7 @@ export default function EnginePage() {
               whileHover={{ y: -4 }}
               className="rounded-xl border border-border bg-gradient-to-br from-card to-secondary/20 px-4 py-3.5"
             >
-              <p className="text-xs tracking-[0.16em] uppercase text-muted-foreground/70 mb-1">{s.layer}</p>
+              <p className="text-xs tracking-[0.16em] uppercase text-muted-foreground mb-1">{s.layer}</p>
               <p className="text-sm font-semibold text-foreground leading-snug">{s.tech}</p>
               <p className="font-mono text-xs text-muted-foreground mt-1">{s.detail}</p>
             </motion.div>
@@ -224,7 +226,7 @@ export default function EnginePage() {
         </div>
       </div>
 
-      <p className="mt-4 text-xs text-muted-foreground/60">
+      <p className="mt-4 text-xs text-muted-foreground">
         The four domain agents run in parallel, then the Chief of Staff and General Manager — one orchestrated
         cascade per scan.
       </p>
@@ -325,7 +327,7 @@ function RunButton({
         <span className={'w-1.5 h-1.5 rounded-full bg-current ' + (running ? 'animate-pulse-dot' : '')} />
         {label}
       </button>
-      <span className="text-xs tracking-wide text-muted-foreground/60">fires the real /analyze cascade on AWS</span>
+      <span className="text-xs tracking-wide text-muted-foreground">fires the real /analyze cascade on AWS</span>
     </div>
   )
 }

@@ -214,9 +214,17 @@ export default function InterventionCanvas() {
   }, [activated])
 
   // First run / demo replay → the full two-phase Confirm-&-analyze sequence.
+  // Start the page-level elapsed timer here too (not only in run()), so the
+  // top-right "Analyzing…" timer ticks on the FIRST run as well — previously it
+  // only started on warm re-runs, leaving the first run's header timer frozen.
   const startActivation = () => {
     setReplay(false)
     setErrInfo(null)
+    setLiveResult(null)
+    setElapsed(0)
+    const start = Date.now()
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    intervalRef.current = setInterval(() => setElapsed((Date.now() - start) / 1000), 100)
     setMode('activating')
   }
 
@@ -291,13 +299,14 @@ export default function InterventionCanvas() {
           <ActivationSequence
             trigger="platform_ui"
             onComplete={(data) => {
+              if (intervalRef.current) clearInterval(intervalRef.current)
               setLiveResult(data)
               saveLiveResult(data)
               markActivated()
-              setElapsed(0)
               setMode('live')
             }}
             onError={(info) => {
+              if (intervalRef.current) clearInterval(intervalRef.current)
               setErrInfo(info)
               setMode('error')
             }}
@@ -500,7 +509,7 @@ function ReRunButton({ mode, elapsed, onRun }: { mode: Mode; elapsed: number; on
           label
         )}
       </button>
-      <span className="text-xs tracking-wide text-muted-foreground/60">
+      <span className="text-xs tracking-wide text-muted-foreground">
         fires the live multi-agent cascade on AWS
       </span>
     </div>
@@ -569,7 +578,7 @@ function CascadeError({
               <>The request did not complete. The service may be warming up — try again in a moment.</>
             )}
           </p>
-          <p className="text-xs text-muted-foreground/60 mt-2">
+          <p className="text-xs text-muted-foreground mt-2">
             elapsed {elapsed.toFixed(1)}s · {info.message}
           </p>
           <div className="flex items-center gap-3 mt-4">
@@ -618,7 +627,7 @@ function ColdOpen({ onRun }: { onRun: () => void }) {
         <span className="w-1.5 h-1.5 rounded-full bg-current" />
         Confirm connections &amp; analyze
       </button>
-      <p className="text-xs text-muted-foreground/60 mt-3">
+      <p className="text-xs text-muted-foreground mt-3">
         Confirms GitHub, Slack, the CRM &amp; organizational memory · then runs the live cascade on AWS
       </p>
     </div>

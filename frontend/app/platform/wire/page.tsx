@@ -68,7 +68,7 @@ export default function WirePage() {
               </span>
             </div>
             <SignalLanes customer={acme} />
-            <p className="mt-4 text-xs text-muted-foreground/60">Live from the connected CRM · customer health, renewal, and security telemetry</p>
+            <p className="mt-4 text-xs text-muted-foreground">Live from the connected CRM · customer health, renewal, and security telemetry</p>
           </>
         )}
       </div>
@@ -137,7 +137,7 @@ function GithubRawFeed() {
               <p className="text-xs text-muted-foreground mt-0.5">{s.commit_velocity.commits_14d} in the last 14 days</p>
             </div>
           </div>
-          <p className="mt-4 text-xs text-muted-foreground/60">Live from the connected GitHub workspace · checked {formatTimestamp(data.checked_at)}</p>
+          <p className="mt-4 text-xs text-muted-foreground">Live from the connected GitHub workspace · checked {formatTimestamp(data.checked_at)}</p>
         </div>
       )}
     </div>
@@ -159,7 +159,7 @@ function RawGroup({
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
       <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">{label}</p>
       {items.length === 0 ? (
-        <p className="text-sm text-muted-foreground/70">{empty}</p>
+        <p className="text-sm text-muted-foreground">{empty}</p>
       ) : (
         <ul className="space-y-1.5">
           {items.map((t, i) => (

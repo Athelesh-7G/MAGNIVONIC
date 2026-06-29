@@ -38,13 +38,13 @@ export const viewport: Viewport = {
   ],
 }
 
-// Light is always the default. Dark only if the user has explicitly toggled it.
+// Dark is the default. Light only if the user has explicitly toggled to it.
 const themeScript = `
 (function(){
   try {
     var stored = localStorage.getItem('magnivonic-theme');
-    if (stored === 'dark') document.documentElement.classList.add('dark');
-  } catch(e) {}
+    if (stored !== 'light') document.documentElement.classList.add('dark');
+  } catch(e) { document.documentElement.classList.add('dark'); }
 })();
 `
 

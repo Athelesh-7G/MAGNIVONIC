@@ -17,12 +17,18 @@ export function useTheme() {
 }
 
 function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light')
+  // Read the class the blocking layout script already set (dark by default), so
+  // the toggle icon is correct on first paint with no flash. SSR → 'dark'.
+  const [theme, setTheme] = useState<Theme>(() =>
+    typeof document !== 'undefined' && !document.documentElement.classList.contains('dark')
+      ? 'light'
+      : 'dark',
+  )
 
   useEffect(() => {
-    // Light is always the default — dark only if explicitly stored
+    // Dark is the default — light only if explicitly stored.
     const stored = localStorage.getItem('magnivonic-theme') as Theme | null
-    const initial: Theme = stored === 'dark' ? 'dark' : 'light'
+    const initial: Theme = stored === 'light' ? 'light' : 'dark'
     setTheme(initial)
     document.documentElement.classList.toggle('dark', initial === 'dark')
   }, [])

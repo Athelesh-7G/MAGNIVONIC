@@ -296,7 +296,7 @@ function VoiceNotePlayer({ text }: { text: string }) {
         )}
         {label}
       </button>
-      <span className="text-[11px] text-muted-foreground/70 leading-snug">
+      <span className="text-[11px] text-muted-foreground leading-snug">
         Synthesized voice (Amazon Polly) — a reading of the note&apos;s text, not the original recording.
       </span>
     </div>

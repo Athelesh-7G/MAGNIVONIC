@@ -124,7 +124,7 @@ export default function BriefsPage() {
               <div className="flex items-center gap-3 mb-3 mt-2 first:mt-0">
                 <span className="text-xs uppercase tracking-widest font-medium text-muted-foreground">{bucket.label}</span>
                 <span className="h-px flex-1 bg-border" />
-                <span className="text-xs text-muted-foreground/60">
+                <span className="text-xs text-muted-foreground">
                   {bucket.groups.length} event{bucket.groups.length === 1 ? '' : 's'}
                 </span>
               </div>

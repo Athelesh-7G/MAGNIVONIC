@@ -20,7 +20,7 @@ export function HierarchyRest() {
         <span className="text-xs tracking-[0.22em] uppercase text-muted-foreground">
           {'>'} Engine · at rest
         </span>
-        <span className="text-xs tracking-[0.18em] uppercase text-muted-foreground/60">
+        <span className="text-xs tracking-[0.18em] uppercase text-muted-foreground">
           idle
         </span>
       </div>

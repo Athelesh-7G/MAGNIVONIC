@@ -209,7 +209,7 @@ export function HowItWorks() {
               {/* Left: index + text */}
               <div>
                 <div className="flex items-baseline gap-3 mb-5">
-                  <span className="font-mono text-[11px] tracking-[0.25em] uppercase text-muted-foreground/60">
+                  <span className="font-mono text-[11px] tracking-[0.25em] uppercase text-muted-foreground">
                     {step.index} / {step.slug}
                   </span>
                 </div>

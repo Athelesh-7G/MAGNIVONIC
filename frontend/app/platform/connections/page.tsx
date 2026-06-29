@@ -147,7 +147,7 @@ function GithubCard() {
               items={s.recent_failures.runs}
             />
           ) : null}
-          <p className="text-xs text-muted-foreground/60">
+          <p className="text-xs text-muted-foreground">
             Live from GET /github · the same delivery feed the Operations agent reads · checked{' '}
             {formatTimestamp(data.checked_at)}
           </p>
@@ -277,7 +277,7 @@ function SlackCard() {
               </div>
             ))}
           </div>
-          <p className="text-xs text-muted-foreground/60">Live from GET /slack · real alerts the orchestrator actually sent.</p>
+          <p className="text-xs text-muted-foreground">Live from GET /slack · real alerts the orchestrator actually sent.</p>
         </div>
       )}
     </ConnectionShell>

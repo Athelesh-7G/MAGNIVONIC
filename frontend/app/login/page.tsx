@@ -39,9 +39,9 @@ export default function LoginPage() {
     }
   }
 
-  function notWired(provider: string) {
+  function notWired() {
     setError('')
-    setComingSoon(`${provider} sign-in is coming soon.`)
+    setComingSoon('Enter the Login Credentials')
   }
 
   return (
@@ -75,14 +75,14 @@ export default function LoginPage() {
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => notWired('Google')}
+                onClick={() => notWired()}
                 className="h-11 inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-background text-[14px] font-medium hover:bg-muted transition-colors"
               >
                 <GoogleIcon /> Google
               </button>
               <button
                 type="button"
-                onClick={() => notWired('Apple')}
+                onClick={() => notWired()}
                 className="h-11 inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-background text-[14px] font-medium hover:bg-muted transition-colors"
               >
                 <AppleIcon /> Apple
@@ -132,7 +132,7 @@ export default function LoginPage() {
                 </p>
               )}
               {comingSoon && (
-                <p className="text-[13px] text-muted-foreground" role="status">
+                <p className="text-[13px] font-medium text-primary" role="status">
                   {comingSoon}
                 </p>
               )}

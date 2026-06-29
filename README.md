@@ -34,6 +34,29 @@ account* are recognized as one cascading event, not four disconnected tickets.
 
 ---
 
+## The AWS Database — Aurora PostgreSQL + pgvector (the core of the system)
+
+Magnivonic runs on **Amazon Aurora PostgreSQL Serverless v2 with the `pgvector`
+extension** as its single source of truth — doing **two jobs in one managed
+engine**:
+
+1. **Relational store** — customers, pipeline deals, risks, recommendations,
+   agent events, Slack alerts, support tickets.
+2. **Vector store** — `organizational_memory.embedding` as `vector(1024)` behind
+   an **HNSW** index (`vector_cosine_ops`), queried by cosine similarity on every
+   analysis run.
+
+**Why this matters:** cross-domain reasoning needs both the *facts* and *semantic
+recall over past incidents*. Aurora + pgvector keeps them in **one transactional
+store**, so an insight and the precedent it cites are never out of sync — **no
+separate vector database** to provision, sync, or pay for. Recall is an HNSW
+nearest-neighbour lookup (cost grows logarithmically), so the same schema serves
+20 incidents or tens of thousands, and **Aurora Serverless v2 autoscales compute
+on demand** with each agent run. This is the deliberate database decision at the
+heart of the product.
+
+---
+
 ## Why It Is Different
 
 - **Typed insights, not a wall of alerts** — every finding is classified as exactly one of Risk · Opportunity · Coordination Gap · Drift, so the output reads like an executive's mental model
@@ -49,25 +72,41 @@ account* are recognized as one cascading event, not four disconnected tickets.
 ## Architecture
 
 ```
-                    Browser (Next.js 16 on Vercel)
-                               │  HTTPS
-                  Amazon API Gateway (REST, prod)
-     ┌──────────────┬──────────┴────────────┬──────────────────┐
-  GET reads     POST /analyze          POST /debrief      POST /speak
-                     │                       │                 │
-              General Manager           embed + pgvector    Amazon Polly
-              (orchestrator)            search → Nova       (neural MP3)
-                     │
-              Chief of Staff (coordinator)
-                     │  ThreadPoolExecutor(max_workers=4)
-     ┌────────────┬──┴─────────┬──────────────┐
-  Revenue     Operations    Customer        Security
-  (Nova +     (GitHub +     (Nova +          (deterministic
-   formula)    formula)      formula)         formula)
-                     │
-        Aurora PostgreSQL Serverless v2 + pgvector
-     (relational store  +  HNSW vector index for memory)
+┌─────────────────────── FRONTEND  ·  Vercel ────────────────────────┐
+│   Marketing site (built with v0)   +   Live platform (login-gated)  │
+│              Next.js 16  ·  Turbopack  ·  Tailwind v4               │
+└──────────────────────────────┬─────────────────────────────────────┘
+                               │  HTTPS / JSON
+┌──────────────────────── API LAYER ─────────────────────────────────┐
+│                 Amazon API Gateway  (REST · prod)                  │
+│   GET  /health /customers /risks /github /slack /memory            │
+│   POST /analyze        /debrief        /speak                       │
+└──────┬──────────────────────┬───────────────────────┬──────────────┘
+       │ POST /analyze         │ POST /debrief          │ POST /speak
+       ▼                       ▼                        ▼
+┌──────────────── AGENT LAYER  ·  AWS Lambda (Python 3.12) ───────────┐
+│   General Manager (orchestrator)                                    │
+│        └─ invokes ─► Chief of Staff (coordinator)                   │
+│                          └─ ThreadPoolExecutor(max_workers=4) ─┐    │
+│        ┌───────────┬───────────┬───────────┬───────────┐       │    │
+│      Revenue    Operations   Customer    Security  ◄───────────┘    │
+│     (formula)  (GitHub +     (formula)  (deterministic)             │
+│                 formula)                                            │
+└──────┬────────────────────────┬───────────────────────┬────────────┘
+       │ PostgreSQL wire (TCP)   │ Bedrock Runtime API    │ Polly API
+       ▼                         ▼                        ▼
+┌──── DATA LAYER ─────────┐ ┌─ AI / ML · Bedrock ──┐ ┌── VOICE ──────┐
+│ Aurora PostgreSQL       │ │ Nova Pro  (reasoning) │ │ Amazon Polly  │
+│ Serverless v2 + pgvector│ │ Titan Embed V2 (1024) │ │ neural → MP3  │
+│ relational + HNSW index │ └──────────────────────┘ └───────────────┘
+└─────────────────────────┘
+   Secrets Manager · EventBridge · IAM   (supporting)   GitHub · Slack
 ```
+
+**Zones:** Frontend (Vercel) → API Layer (API Gateway) → Agent Layer (Lambda) →
+Data Layer (Aurora + pgvector) + AI/ML (Bedrock) + Voice (Polly). The full
+component-and-connection breakdown (every edge, direction, and protocol) is in
+[`architecture-spec.md`](architecture-spec.md).
 
 ---
 
@@ -141,16 +180,28 @@ Titan Embed V2 · **Amazon Polly** (neural) · Amazon EventBridge · AWS Secrets
 Next.js 16 · TypeScript · Turbopack · Tailwind CSS v4 · Framer Motion · SWR ·
 **built with [v0](https://v0.dev)** and **deployed on Vercel**
 
-### Why Aurora PostgreSQL + pgvector
+> The database choice — **Aurora PostgreSQL + pgvector** doing relational *and*
+> vector work in one managed engine — is detailed prominently near the top of this
+> README. It is the core architectural decision.
 
-Cross-domain reasoning needs two things from one store: the **relational facts**
-(accounts, risks, recommendations, agent events, alerts) *and* **semantic recall**
-over past incidents. Aurora Serverless v2 + pgvector does both in a single managed
-engine — so an insight and the memory it cites live in the same transactional store,
-with **no separate vector database** to provision, sync, or keep consistent. Recall
-is an HNSW nearest-neighbour lookup (cost grows logarithmically), so the same
-architecture serves twenty incidents or tens of thousands without a schema change,
-and Serverless v2 autoscales compute on demand.
+---
+
+## Business Model
+
+Magnivonic is a **horizontal B2B intelligence layer**, sold per-seat to the people
+who make cross-functional decisions (Chief of Staff, RevOps, VP Eng, Heads of
+CS/Security) — the roles that today stitch this picture together by hand.
+
+- **Per-seat SaaS** for decision-makers, with usage-based analysis runs.
+- **Land-and-expand:** start with one team's connectors (CRM + support), expand
+  across Security/Engineering as the cross-domain value compounds.
+- **Cost structure favours it:** fully serverless — Lambda, Aurora Serverless v2,
+  and Bedrock all scale to zero / on demand, so margin holds at low volume and the
+  same core platform serves SaaS, healthcare, public sector, and financial
+  services without a rebuild.
+- **The moat is the memory:** every run makes the organization's own memory
+  sharper, so switching cost rises the longer a customer stays — a compounding,
+  defensible asset, not a commodity dashboard.
 
 ---
 

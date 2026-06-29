@@ -198,7 +198,7 @@ function TeamView({ config }: { config: TeamConfig }) {
           ) : (
             <TeamSignalStrip customers={customers} department={config.department} />
           )}
-          <p className="mt-3 text-xs text-muted-foreground/60">
+          <p className="mt-3 text-xs text-muted-foreground">
             {config.department === 'operations'
               ? 'Live from the connected GitHub workspace'
               : `Live from ${config.channel}`}

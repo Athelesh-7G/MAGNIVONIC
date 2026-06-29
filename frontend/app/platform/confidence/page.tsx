@@ -126,7 +126,7 @@ export default function ConfidencePage() {
             </pre>
             {s.routing ? (
               <p className="text-xs text-muted-foreground mt-2">
-                <span className="font-semibold text-foreground/70">Routing: </span>
+                <span className="font-semibold text-foreground/90">Routing: </span>
                 {s.routing}
               </p>
             ) : null}
@@ -134,7 +134,7 @@ export default function ConfidencePage() {
         ))}
       </div>
 
-      <p className="mt-6 text-xs text-muted-foreground/70">
+      <p className="mt-6 text-xs text-muted-foreground">
         Routing thresholds and weights live in the agent code (backend/agents/*). This page is generated
         from the same real formulas the agents run.
       </p>
