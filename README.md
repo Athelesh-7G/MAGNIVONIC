@@ -2,7 +2,7 @@
 
 # MAGNIVONIC
 
-### The Organizational Intelligence Layer — Cross-Domain Signals to Decisions Leaders Can Act On
+### The Organizational Intelligence Layer for the Enterprises.
 
 [Live Platform](https://magnivonic.vercel.app/) · [AWS Bedrock](https://aws.amazon.com/bedrock/) · [Nova Pro](https://aws.amazon.com/bedrock/nova/)
 
