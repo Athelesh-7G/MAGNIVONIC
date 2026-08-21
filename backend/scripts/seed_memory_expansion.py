@@ -6,12 +6,24 @@ embed_memory.py (or its NULL-embedding pass) fills those in after.
 Idempotent: skips insertion entirely if the table already has
 15+ rows.
 """
+import json
+
+import boto3
 import psycopg2
 
+
+def _load_aurora_secret() -> dict:
+    """Fetch Aurora connection details from Secrets Manager — same secret
+    backend/layer/python/secrets.py reads for the deployed Lambdas."""
+    client = boto3.client('secretsmanager', region_name='us-east-1')
+    response = client.get_secret_value(SecretId='magnivonic/aurora')
+    return json.loads(response['SecretString'])
+
+
+_creds = _load_aurora_secret()
 conn = psycopg2.connect(
-    host='magnivonic-dev.cluster-ckh6ce2aesni.us-east-1.rds.amazonaws.com',
-    port=5432, dbname='postgres', user='postgres',
-    password='MagniVonic2026Test', sslmode='require'
+    host=_creds['host'], port=int(_creds['port']), dbname=_creds['dbname'],
+    user=_creds['username'], password=_creds['password'], sslmode='require'
 )
 
 NEW_INCIDENTS = [
