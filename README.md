@@ -73,14 +73,14 @@ heart of the product.
 
 ```
 ┌─────────────────────── FRONTEND  ·  Vercel ────────────────────────┐
-│   Marketing site (built with v0)   +   Live platform (login-gated)  │
-│              Next.js 16  ·  Turbopack  ·  Tailwind v4               │
+│   Marketing site (built with v0)   +   Live platform (public)      |
+│              Next.js 16  ·  Turbopack  ·  Tailwind v4              │
 └──────────────────────────────┬─────────────────────────────────────┘
                                │  HTTPS / JSON
 ┌──────────────────────── API LAYER ─────────────────────────────────┐
 │                 Amazon API Gateway  (REST · prod)                  │
 │   GET  /health /customers /risks /github /slack /memory            │
-│   POST /analyze        /debrief        /speak                       │
+│   POST /analyze        /debrief        /speak                      │
 └──────┬──────────────────────┬───────────────────────┬──────────────┘
        │ POST /analyze         │ POST /debrief          │ POST /speak
        ▼                       ▼                        ▼
@@ -96,8 +96,8 @@ heart of the product.
        │ PostgreSQL wire (TCP)   │ Bedrock Runtime API    │ Polly API
        ▼                         ▼                        ▼
 ┌──── DATA LAYER ─────────┐ ┌─ AI / ML · Bedrock ──┐ ┌── VOICE ──────┐
-│ Aurora PostgreSQL       │ │ Nova Pro  (reasoning) │ │ Amazon Polly  │
-│ Serverless v2 + pgvector│ │ Titan Embed V2 (1024) │ │ neural → MP3  │
+│ Aurora PostgreSQL       │ │ Nova Pro  (reasoning) │ │ Amazon Polly │
+│ Serverless v2 + pgvector│ │ Titan Embed V2 (1024) │ │ neural → MP3 │
 │ relational + HNSW index │ └──────────────────────┘ └───────────────┘
 └─────────────────────────┘
    Secrets Manager · EventBridge · IAM   (supporting)   GitHub · Slack
@@ -218,7 +218,6 @@ magnivonic/
 │   ├── app/             marketing homepage · platform/* (11 pages) · login · api/*
 │   ├── components/      home/* · platform/* · brand.tsx
 │   ├── lib/             api.ts · activation.ts · auth.ts
-│   └── proxy.ts         Next 16 proxy — the /platform/* login gate
 └── docs/                CLAUDE.md · PROGRESS.md · PROJECT_GUIDE.md · SCHEMA.md
 ```
 
@@ -240,11 +239,11 @@ magnivonic/
 
 **[magnivonic.vercel.app](https://magnivonic.vercel.app/)**
 
-The live platform is login-gated (it fires real AWS/Bedrock calls); the marketing
-site is public. Inside, confirm the connections and run a real analysis — watch the
-four domain agents fire in parallel, the Chief of Staff and General Manager
-synthesize typed insights, expand a card to see its cross-domain evidence and
-computed confidence, ask Debrief a question and have the answer read back aloud, and
-explore the compounding organizational memory.
+The live platform is fully public and fires real AWS/Bedrock calls — no login
+required. Head straight in, confirm the connections, and run a real analysis —
+watch the four domain agents fire in parallel, the Chief of Staff and General
+Manager synthesize typed insights, expand a card to see its cross-domain
+evidence and computed confidence, ask Debrief a question and have the answer
+read back aloud, and explore the compounding organizational memory.
 
 ---
