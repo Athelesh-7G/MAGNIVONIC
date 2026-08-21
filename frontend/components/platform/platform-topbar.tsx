@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { Moon, Sun, Power, LogOut } from 'lucide-react'
+import { Moon, Sun, Power } from 'lucide-react'
 import { useTheme } from '@/components/providers'
 import { MagnivonicLockup } from '@/components/brand'
 import { useActivation, resetActivation } from '@/lib/activation'
@@ -49,40 +48,9 @@ export function PlatformTopbar() {
           >
             {theme === 'dark' ? <Sun size={16} strokeWidth={2} /> : <Moon size={16} strokeWidth={2} />}
           </button>
-
-          <LogoutControl />
         </div>
       </div>
     </header>
-  )
-}
-
-/** Sign out: clears the session cookie, then returns to the login gate. */
-function LogoutControl() {
-  const router = useRouter()
-  const [busy, setBusy] = useState(false)
-
-  async function logout() {
-    setBusy(true)
-    try {
-      await fetch('/api/logout', { method: 'POST' })
-    } catch {
-      /* clearing the cookie best-effort; navigate regardless */
-    }
-    router.replace('/login')
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={logout}
-      disabled={busy}
-      aria-label="Sign out"
-      title="Sign out"
-      className="w-9 h-9 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors disabled:opacity-60"
-    >
-      <LogOut size={16} strokeWidth={2} />
-    </button>
   )
 }
 
