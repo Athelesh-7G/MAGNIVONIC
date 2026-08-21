@@ -11,8 +11,6 @@
 ![Bedrock](https://img.shields.io/badge/Bedrock-Nova%20Pro%20%2B%20Titan%20V2-blue)
 ![Polly](https://img.shields.io/badge/Amazon%20Polly-neural%20voice-green)
 
-*Built for the H0 "Hack the Zero Stack" hackathon — AWS × Vercel, Monetizable B2B App track.*
-
 </div>
 
 ---
