@@ -96,8 +96,8 @@ heart of the product.
        │ PostgreSQL wire (TCP)   │ Bedrock Runtime API    │ Polly API
        ▼                         ▼                        ▼
 ┌──── DATA LAYER ─────────┐ ┌─ AI / ML · Bedrock ──┐ ┌── VOICE ──────┐
-│ Aurora PostgreSQL       │ │ Nova Pro  (reasoning) │ │ Amazon Polly │
-│ Serverless v2 + pgvector│ │ Titan Embed V2 (1024) │ │ neural → MP3 │
+│ Aurora PostgreSQL       │ │ Nova Pro  (reasoning)│ │ Amazon Polly │
+│ Serverless v2 + pgvector│ │ Titan Embed V2 (1024)│ │ neural → MP3 │
 │ relational + HNSW index │ └──────────────────────┘ └───────────────┘
 └─────────────────────────┘
    Secrets Manager · EventBridge · IAM   (supporting)   GitHub · Slack
