@@ -32,3 +32,9 @@ No local backend is required to run the UI — it calls the deployed AWS endpoin
 - `lib/` — `api.ts` (typed AWS client), `activation.ts`, `auth.ts`
 
 See `../docs/PROJECT_GUIDE.md` for the full system reference.
+
+## Configuration
+
+The browser calls only the same-origin proxy at `/api/proxy/*`; the API Gateway URL and key never reach the client.
+Set two server-side env vars (Vercel -> Settings -> Environment Variables, Production): `MAGNIVONIC_API_URL` (the API Gateway stage URL) and `MAGNIVONIC_API_KEY` (the API key, mark Sensitive).
+See `.env.example`; for local dev copy it to `.env.local` and fill in the values.

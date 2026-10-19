@@ -1,4 +1,4 @@
-const BASE_URL = 'https://tjysjf32v9.execute-api.us-east-1.amazonaws.com/prod'
+const BASE_URL = '/api/proxy'
 
 // Default timeout for simple reads. Analyze gets a longer one (see triggerAnalysis).
 const DEFAULT_TIMEOUT_MS = 10_000
